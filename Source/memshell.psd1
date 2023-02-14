@@ -1,7 +1,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'memshell.psm1'
+RootModule = 'MEMShell.psm1'
 
 # Version number of this module.
 ModuleVersion = '0.0.1'
@@ -46,7 +46,7 @@ PowerShellVersion = '5.1'
 CompatiblePSEditions = @('Core','Desktop')
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @(MSAL.PS)
+RequiredModules = @('MSAL.PS')
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
