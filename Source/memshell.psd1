@@ -19,7 +19,7 @@ PrivateData            = @{
         Tags           = 'intune'
 
         # A URL to the license for this module.
-        LicenseUri     = 'https://github.com/PoshCode/ModuleBuilder/blob/master/LICENSE'
+        LicenseUri     = 'https://github.com/ennnbeee/memshell/blob/main/LICENSE'
 
         # A URL to the main website for this project.
         ProjectUri     = 'https://github.com/ennnbeee/memshell'
