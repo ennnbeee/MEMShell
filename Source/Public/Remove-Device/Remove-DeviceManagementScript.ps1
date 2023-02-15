@@ -12,8 +12,7 @@ Function Remove-DeviceManagementScript() {
     NAME: Remove-DeviceManagementScript
     #>
 
-    [cmdletbinding()]
-
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -25,13 +24,14 @@ Function Remove-DeviceManagementScript() {
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        Invoke-MEMRestMethod -Uri $uri -Method Delete
+        if ($PSCmdlet.ShouldProcess("ShouldProcess?")) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
     }
     catch {
-        $exs = $Error.ErrorDetails
+        $exs = $Error
         $ex = $exs[0]
-        Write-Output "Response content:`n$ex"
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        Write-Error "`n$ex"
         break
     }
 }

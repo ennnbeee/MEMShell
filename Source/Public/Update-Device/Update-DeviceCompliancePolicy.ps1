@@ -12,7 +12,7 @@ Function Update-DeviceCompliancePolicy() {
     NAME: Update-DeviceCompliancePolicy
     #>
 
-    [cmdletbinding()]
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -27,14 +27,15 @@ Function Update-DeviceCompliancePolicy() {
     try {
         Test-Json -Json $JSON
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Patch -Body $JSON
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Patch -Body $JSON
+        }
 
     }
     catch {
-        $exs = $Error.ErrorDetails
+        $exs = $Error
         $ex = $exs[0]
-        Write-Output "Response content:`n$ex"
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        Write-Error "`n$ex"
         break
     }
 }

@@ -22,10 +22,9 @@ Function Get-EnrolmentESP() {
         Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
-        $exs = $Error.ErrorDetails
+        $exs = $Error
         $ex = $exs[0]
-        Write-Output "Response content:`n$ex"
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        Write-Error "`n$ex"
         break
     }
 }

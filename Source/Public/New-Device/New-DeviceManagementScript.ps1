@@ -12,7 +12,7 @@ Function New-DeviceManagementScript() {
     NAME: Get-DeviceEnrollmentConfigurations
     #>
 
-    [cmdletbinding()]
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
     Param (
         # Path or URL to Powershell-script to add to Intune
         [Parameter(Mandatory = $true)]
@@ -30,10 +30,6 @@ Function New-DeviceManagementScript() {
     $DisplayName = $FileName.Split('.')[0]
     $B64File = [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("$File"));
 
-    if ($URL -eq $true) {
-        Remove-Item $File -Force
-    }
-
     $JSON = @"
 {
     "@odata.type": "#microsoft.graph.deviceManagementScript",
@@ -50,19 +46,19 @@ Function New-DeviceManagementScript() {
 "@
 
     $graphApiVersion = 'Beta'
-    $DMS_resource = 'deviceManagement/deviceManagementScripts'
-    Write-Verbose "Resource: $DMS_resource"
+    $Resource = 'deviceManagement/deviceManagementScripts'
 
     try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$DMS_resource"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
     }
 
     catch {
-        $exs = $Error.ErrorDetails
+        $exs = $Error
         $ex = $exs[0]
-        Write-Output "Response content:`n$ex"
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        Write-Error "`n$ex"
         break
     }
 }

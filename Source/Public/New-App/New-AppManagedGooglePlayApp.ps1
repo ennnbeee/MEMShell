@@ -12,8 +12,7 @@ Function New-AppManagedGooglePlayApp() {
     NAME: Get-AuthTokenMSAL
     #>
 
-    [cmdletbinding()]
-
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -31,13 +30,14 @@ Function New-AppManagedGooglePlayApp() {
         $JSON = $Packages | ConvertTo-Json -Depth 3
 
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
     }
     catch {
-        $exs = $Error.ErrorDetails
+        $exs = $Error
         $ex = $exs[0]
-        Write-Output "Response content:`n$ex"
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        Write-Error "`n$ex"
         break
     }
 }

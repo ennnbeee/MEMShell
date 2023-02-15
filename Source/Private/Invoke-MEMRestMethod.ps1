@@ -23,7 +23,7 @@ Function Invoke-MEMRestMethod() {
         $ContentType = 'application/json'
     )
 
-    if ($authToken) {
+    if ($global:authToken) {
 
         # Setting DateTime to Universal time to work in all timezones
         $DateTime = (Get-Date).ToUniversalTime()
@@ -38,7 +38,7 @@ Function Invoke-MEMRestMethod() {
             if ($null -eq $User -or $User -eq '') {
                 $User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
             }
-            $authToken = Get-AuthTokenMSAL -User $User
+            $global:authToken = Get-AuthTokenMSAL -User $User
         }
     }
     # Authentication doesn't exist, calling Get-AuthToken function
@@ -47,12 +47,13 @@ Function Invoke-MEMRestMethod() {
             $User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
         }
         # Getting the authorization token
-        $authToken = Get-AuthTokenMSAL -User $User
+        $global:authToken = Get-AuthTokenMSAL -User $User
     }
 
-    $authToken['ConsistencyLevel'] = 'eventual'
-    $Headers = $authToken
+    $global:authToken['ConsistencyLevel'] = 'eventual'
+    $Headers = $global:authToken
 
+    $Method = 'Get'
     if ($Method -eq 'Get') {
         $ValueOnly = 'True'
         $params = @{
@@ -96,9 +97,9 @@ Function Invoke-MEMRestMethod() {
         }
     }
     Catch {
-        $exs = $Error.ErrorDetails
+        $exs = $Error
         $ex = $exs[0]
-        Write-Output "Response content:`n$ex"
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        Write-Error "`n$ex"
+        break
     }
 }
