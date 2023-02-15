@@ -50,13 +50,13 @@ Function Add-ApplicationAssignment() {
                 foreach ($Assignment in $Assignments) {
 
                     If (($null -ne $TargetGroupId) -and ($TargetGroupId -eq $Assignment.target.groupId)) {
-                        Write-Host 'The App is already assigned to the Group' -ForegroundColor Yellow
+                        Write-Output 'The App is already assigned to the Group'
                     }
                     ElseIf (($All -eq 'Devices') -and ($Assignment.target.'@odata.type' -eq '#microsoft.graph.allDevicesAssignmentTarget')) {
-                        Write-Host 'The App is already assigned to the All Devices Group' -ForegroundColor Yellow
+                        Write-Output 'The App is already assigned to the All Devices Group'
                     }
                     ElseIf (($All -eq 'Users') -and ($Assignment.target.'@odata.type' -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')) {
-                        Write-Host 'The App is already assigned to the All Users Group' -ForegroundColor Yellow
+                        Write-Output 'The App is already assigned to the All Users Group'
                     }
                     Else {
                         $TargetGroup = New-Object -TypeName psobject
@@ -118,17 +118,15 @@ Function Add-ApplicationAssignment() {
         $Output | Add-Member -MemberType NoteProperty -Name 'mobileAppAssignments' -Value @($TargetGroups)
 
         $JSON = $Output | ConvertTo-Json -Depth 3
-
+        Test-MEMJSON -Json $JSON
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Post -Body $JSON -ContentType 'application/json'
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
     }
     catch {
         $exs = $Error.ErrorDetails
         $ex = $exs[0]
-        Write-Host "Response content:`n$ex" -f Red
-        Write-Host
+        Write-Output "Response content:`n$ex"
         Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
-        Write-Host
         break
     }
 }

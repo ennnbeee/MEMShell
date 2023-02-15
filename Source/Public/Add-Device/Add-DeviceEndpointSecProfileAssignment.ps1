@@ -74,10 +74,8 @@ Function Add-DeviceEndpointSecProfileAssignment() {
     catch {
         $exs = $Error.ErrorDetails
         $ex = $exs[0]
-        Write-Host "Response content:`n$ex" -f Red
-        Write-Host
+        Write-Output "Response content:`n$ex"
         Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
-        Write-Host
         break
     }
 }

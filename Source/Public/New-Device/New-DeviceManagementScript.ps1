@@ -13,49 +13,28 @@ Function New-DeviceManagementScript() {
     #>
 
     [cmdletbinding()]
-
     Param (
         # Path or URL to Powershell-script to add to Intune
         [Parameter(Mandatory = $true)]
         [string]$File,
         # PowerShell description in Intune
         [Parameter(Mandatory = $false)]
-        [string]$Description,
-        # Set to true if it is a URL
-        [Parameter(Mandatory = $false)]
-        [switch][bool]$URL = $false
+        [string]$Description
     )
-    if ($URL -eq $true) {
-        $FileName = $File -split '/'
-        $FileName = $FileName[-1]
-        $OutFile = "$env:TEMP\$FileName"
-        try {
-            Invoke-WebRequest -Uri $File -UseBasicParsing -OutFile $OutFile
-        }
-        catch {
-            Write-Host "Could not download file from URL: $File" -ForegroundColor Red
-            break
-        }
-        $File = $OutFile
-        if (!(Test-Path $File)) {
-            Write-Host "$File could not be located." -ForegroundColor Red
-            break
-        }
+
+    if (!(Test-Path $File)) {
+        Write-Output "$File could not be located."
+        break
     }
-    elseif ($URL -eq $false) {
-        if (!(Test-Path $File)) {
-            Write-Host "$File could not be located." -ForegroundColor Red
-            break
-        }
-        $FileName = Get-Item $File | Select-Object -ExpandProperty Name
-        $DisplayName = $FileName.Split('.')[0]
-        $B64File = [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("$File"));
+    $FileName = Get-Item $File | Select-Object -ExpandProperty Name
+    $DisplayName = $FileName.Split('.')[0]
+    $B64File = [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("$File"));
 
-        if ($URL -eq $true) {
-            Remove-Item $File -Force
-        }
+    if ($URL -eq $true) {
+        Remove-Item $File -Force
+    }
 
-        $JSON = @"
+    $JSON = @"
 {
     "@odata.type": "#microsoft.graph.deviceManagementScript",
     "displayName": "$DisplayName",
@@ -70,22 +49,20 @@ Function New-DeviceManagementScript() {
 }
 "@
 
-        $graphApiVersion = 'Beta'
-        $DMS_resource = 'deviceManagement/deviceManagementScripts'
-        Write-Verbose "Resource: $DMS_resource"
+    $graphApiVersion = 'Beta'
+    $DMS_resource = 'deviceManagement/deviceManagementScripts'
+    Write-Verbose "Resource: $DMS_resource"
 
-        try {
-            $uri = "https://graph.microsoft.com/$graphApiVersion/$DMS_resource"
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$DMS_resource"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
 
-        catch {
-            $exs = $Error.ErrorDetails
-            $ex = $exs[0]
-            Write-Host "Response content:`n$ex" -f Red
-            Write-Host
-            Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
-            Write-Host
-        }
+    catch {
+        $exs = $Error.ErrorDetails
+        $ex = $exs[0]
+        Write-Output "Response content:`n$ex"
+        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        break
     }
 }

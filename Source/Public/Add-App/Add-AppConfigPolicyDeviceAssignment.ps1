@@ -67,18 +67,16 @@ Function Add-AppConfigPolicyDeviceAssignment() {
         $Output = New-Object -TypeName psobject
         $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
         $JSON = $Output | ConvertTo-Json -Depth 3
-
+        Test-MEMJSON -Json $JSON
         # POST to Graph Service
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Post -Body $JSON -ContentType 'application/json'
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
     }
     catch {
         $exs = $Error.ErrorDetails
         $ex = $exs[0]
-        Write-Host "Response content:`n$ex" -f Red
-        Write-Host
+        Write-Output "Response content:`n$ex"
         Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
-        Write-Host
         break
     }
 }

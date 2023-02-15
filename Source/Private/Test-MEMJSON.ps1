@@ -1,4 +1,4 @@
-Function Get-AppAppCategory() {
+Function Test-MEMJSON() {
 
     <#
     .SYNOPSIS
@@ -13,24 +13,23 @@ Function Get-AppAppCategory() {
     #>
 
     [cmdletbinding()]
-    param
-    (
+    param (
         [Parameter(Mandatory = $true)]
-        $Id
+        $JSON
     )
 
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/categories"
-
     try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
+        $TestJSON = ConvertFrom-Json $JSON -ErrorAction Stop
+        $TestJSON | Out-Null
+        $validJson = $true
     }
     catch {
-        $exs = $Error.ErrorDetails
-        $ex = $exs[0]
-        Write-Output "Response content:`n$ex"
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
+        $validJson = $false
+        $_.Exception
+    }
+
+    if (!$validJson) {
+        Write-Output "Provided JSON isn't in valid JSON format"
         break
     }
 }

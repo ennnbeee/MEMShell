@@ -29,11 +29,11 @@ Function Get-DeviceUpdatePolicy() {
         if ($Windows10.IsPresent) { $Count_Params++ }
         if ($macOS.IsPresent) { $Count_Params++ }
         if ($Count_Params -gt 1) {
-            Write-Host 'Multiple parameters set, specify a single parameter -iOS or -Windows10 or -macOS against the function' -f Red
+            Write-Error 'Multiple parameters set, specify a single parameter -iOS or -Windows10 or -macOS against the function'
+            break
         }
         elseif ($Count_Params -eq 0) {
-            Write-Host 'Parameter -iOS or -Windows10 or -macOS required against the function...' -ForegroundColor Red
-            Write-Host
+            Write-Error 'Parameter -iOS or -Windows10 or -macOS required against the function...'
             break
         }
         elseif ($Windows10) {
@@ -52,10 +52,8 @@ Function Get-DeviceUpdatePolicy() {
     catch {
         $exs = $Error.ErrorDetails
         $ex = $exs[0]
-        Write-Host "Response content:`n$ex" -f Red
-        Write-Host
+        Write-Output "Response content:`n$ex"
         Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
-        Write-Host
         break
     }
 }

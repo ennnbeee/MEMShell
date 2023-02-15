@@ -56,7 +56,7 @@ Function Add-AppProtectionPolicyAssignment() {
         $Output = New-Object -TypeName psobject
         $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
         $JSON = $Output | ConvertTo-Json -Depth 3
-
+        Test-MEMJSON -Json $JSON
         if ($OS -eq 'Android') {
             $uri = "https://graph.microsoft.com/$graphApiVersion/deviceAppManagement/androidManagedAppProtections('$ID')/assign"
         }
@@ -65,15 +65,13 @@ Function Add-AppProtectionPolicyAssignment() {
             $uri = "https://graph.microsoft.com/$graphApiVersion/deviceAppManagement/iosManagedAppProtections('$ID')/assign"
         }
 
-        Invoke-RestMethod -Uri $uri -Method Post -ContentType 'application/json' -Body $JSON -Headers $authToken
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
     }
     catch {
         $exs = $Error.ErrorDetails
         $ex = $exs[0]
-        Write-Host "Response content:`n$ex" -f Red
-        Write-Host
+        Write-Output "Response content:`n$ex"
         Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
-        Write-Host
         break
     }
 }

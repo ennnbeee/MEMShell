@@ -23,7 +23,7 @@ Function Invoke-MEMRestMethod() {
         $ContentType = 'application/json'
     )
 
-    if ($global:authToken) {
+    if ($authToken) {
 
         # Setting DateTime to Universal time to work in all timezones
         $DateTime = (Get-Date).ToUniversalTime()
@@ -33,28 +33,25 @@ Function Invoke-MEMRestMethod() {
 
         if ($TokenExpires -le 0) {
 
-            Write-Host 'Authentication Token expired' $TokenExpires 'minutes ago' -ForegroundColor Yellow
-            Write-Host
+            Write-Output "Authentication Token expired $TokenExpires minutes ago"
             # Defining User Principal Name if not present
             if ($null -eq $User -or $User -eq '') {
                 $User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
-                Write-Host
             }
-            $global:authToken = Get-AuthTokenMSAL -User $User
+            $authToken = Get-AuthTokenMSAL -User $User
         }
     }
     # Authentication doesn't exist, calling Get-AuthToken function
     else {
         if ($null -eq $User -or $User -eq '') {
             $User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
-            Write-Host
         }
         # Getting the authorization token
-        $global:authToken = Get-AuthTokenMSAL -User $User
+        $authToken = Get-AuthTokenMSAL -User $User
     }
 
     $authToken['ConsistencyLevel'] = 'eventual'
-    $Headers = $global:authToken
+    $Headers = $authToken
 
     if ($Method -eq 'Get') {
         $ValueOnly = 'True'
@@ -101,9 +98,7 @@ Function Invoke-MEMRestMethod() {
     Catch {
         $exs = $Error.ErrorDetails
         $ex = $exs[0]
-        Write-Host "Response content:`n$ex" -f Red
-        Write-Host
+        Write-Output "Response content:`n$ex"
         Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
-        Write-Host
     }
 }
