@@ -46,7 +46,7 @@ PowerShellVersion = '5.1'
 CompatiblePSEditions = @('Core','Desktop')
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @('MSAL.PS')
+RequiredModules = @('MSAL.PS', 'Microsoft.PowerShell.Utility')
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
