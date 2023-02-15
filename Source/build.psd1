@@ -3,7 +3,7 @@
 @{
     ModuleManifest  = "MEMShell.psd1"
     # Subsequent relative paths are to the ModuleManifest
-    OutputDirectory = "../Output"
+    OutputDirectory = "../"
     VersionedOutputDirectory = $true
     CopyDirectories = @('')
 }

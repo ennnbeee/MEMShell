@@ -10,7 +10,7 @@ PrivateData            = @{
     # PrivateData.PSData is the PowerShell Gallery data
     PSData             = @{
         # Prerelease string should be here, so we can set it
-        Prerelease     = 'source'
+        Prerelease     = ''
 
         # Release Notes have to be here, so we can update them
         ReleaseNotes   = ''
@@ -25,7 +25,7 @@ PrivateData            = @{
         ProjectUri     = 'https://github.com/ennnbeee/memshell'
 
         # A URL to an icon representing this module.
-        IconUri        = 'https://raw.githubusercontent.com/ennnbeee/memshell/main/memshell.png'
+        IconUri        = 'https://raw.githubusercontent.com/ennnbeee/memshell/main/MEMShell.png'
     } # End of PSData
 } # End of PrivateData
 # Supported PSEditions

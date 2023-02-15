@@ -1,5 +1,3 @@
-#region Authentication
-
 if ($global:authToken) {
 
     # Setting DateTime to Universal time to work in all timezones

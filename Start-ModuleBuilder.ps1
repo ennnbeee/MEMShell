@@ -7,7 +7,7 @@ $Params = @{
     SourcePath = "$PSScriptRoot\Source\MEMShell.psd1"
     CopyPaths = @("$PSScriptRoot\README.md")
     Version = $Version
-    UnversionedOutputDirectory = $true
+    #UnversionedOutputDirectory = $true
 }
 
 Build-Module @params
