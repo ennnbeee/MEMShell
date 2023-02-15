@@ -27,7 +27,7 @@ Function Update-DeviceCompliancePolicy() {
     try {
         Test-Json -Json $JSON
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Patch -Body $JSON -ContentType 'application/json'
+        Invoke-MEMRestMethod -Uri $uri -Method Patch -Body $JSON
 
     }
     catch {

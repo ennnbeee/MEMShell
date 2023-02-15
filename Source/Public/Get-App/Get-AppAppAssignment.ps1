@@ -13,19 +13,19 @@ Function Get-AppAppAssignment() {
     #>
 
     [cmdletbinding()]
-    
+
     param
     (
         [Parameter(Mandatory = $true)]
         $Id
     )
-    
+
     $graphApiVersion = 'Beta'
     $Resource = "deviceAppManagement/mobileApps/$Id/?`$expand=categories,assignments"
-        
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        (Invoke-RestMethod -Uri $uri –Headers $authToken –Method Get)
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

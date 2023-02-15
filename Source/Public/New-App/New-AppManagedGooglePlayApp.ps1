@@ -31,7 +31,7 @@ Function New-AppManagedGooglePlayApp() {
         $JSON = $Packages | ConvertTo-Json -Depth 3
 
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-RestMethod -Uri $uri -Method Post -ContentType 'application/json' -Body $JSON -Headers $authToken
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
     }
     catch {
         $exs = $Error.ErrorDetails

@@ -1,5 +1,5 @@
 Function Get-DeviceUpdatePolicy() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,7 +11,7 @@ Function Get-DeviceUpdatePolicy() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
 
     param
@@ -38,19 +38,16 @@ Function Get-DeviceUpdatePolicy() {
         }
         elseif ($Windows10) {
             $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.windowsUpdateForBusinessConfiguration')&`$expand=groupAssignments"
-            $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-            (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
         }
         elseif ($iOS) {
             $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.iosUpdateConfiguration')&`$expand=groupAssignments"
-            $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-            (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
         }
         elseif ($macOS) {
             $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.macOSSoftwareUpdateConfiguration')&`$expand=groupAssignments"
-            $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-            (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
         }
+
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

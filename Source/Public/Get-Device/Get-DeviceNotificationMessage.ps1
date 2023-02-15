@@ -1,5 +1,5 @@
 Function Get-DeviceNotificationMessage() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,7 +11,7 @@ Function Get-DeviceNotificationMessage() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
     param(
         [parameter(Mandatory = $true)]
@@ -20,10 +20,10 @@ Function Get-DeviceNotificationMessage() {
 
     $graphApiVersion = 'Beta'
     $Resource = "deviceManagement/notificationMessageTemplates/$Id/localizedNotificationMessages"
-    
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

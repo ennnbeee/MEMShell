@@ -1,5 +1,5 @@
 Function Get-DeviceManagementScript() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,22 +11,22 @@ Function Get-DeviceManagementScript() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
-    
+
     param (
-    
+
         [Parameter(Mandatory = $true)]
         $Id
-    
+
     )
-    
+
     $graphApiVersion = 'Beta'
     $Resource = 'deviceManagement/deviceManagementScripts'
-        
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource/$Id"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

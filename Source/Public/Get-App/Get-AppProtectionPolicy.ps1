@@ -11,15 +11,15 @@ Function Get-AppProtectionPolicy() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
 
     $graphApiVersion = 'Beta'
     $Resource = 'deviceAppManagement/managedAppPolicies'
-    
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value | Where-Object { ($_.'@odata.type').contains('ManagedAppProtection') -or ($_.'@odata.type').contains('InformationProtectionPolicy') }
+        Invoke-MEMRestMethod -Uri $uri -Method Get | Where-Object { ($_.'@odata.type').contains('ManagedAppProtection') -or ($_.'@odata.type').contains('InformationProtectionPolicy') }
     }
     catch {
         $exs = $Error.ErrorDetails

@@ -1,5 +1,5 @@
 Function New-DeviceManagementScript() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,9 +11,9 @@ Function New-DeviceManagementScript() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
-    
+
     Param (
         # Path or URL to Powershell-script to add to Intune
         [Parameter(Mandatory = $true)]
@@ -76,7 +76,7 @@ Function New-DeviceManagementScript() {
 
         try {
             $uri = "https://graph.microsoft.com/$graphApiVersion/$DMS_resource"
-            Invoke-RestMethod -Uri $uri -Headers $authToken -Method Post -Body $JSON -ContentType 'application/json'
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
         }
 
         catch {

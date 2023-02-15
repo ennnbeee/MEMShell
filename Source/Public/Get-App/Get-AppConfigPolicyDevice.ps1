@@ -16,10 +16,10 @@ Function Get-AppConfigPolicyDevice() {
 
     $graphApiVersion = 'Beta'
     $Resource = 'deviceAppManagement/mobileAppConfigurations'
-        
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-                (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value 
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

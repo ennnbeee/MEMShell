@@ -11,21 +11,21 @@ Function Get-DeviceConfigProfileAssignment() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-    
+
     [cmdletbinding()]
-    
+
     param
     (
         [Parameter(Mandatory = $true)]
         $Id
     )
-    
+
     $graphApiVersion = 'Beta'
     $Resource = 'deviceManagement/deviceConfigurations'
-    
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

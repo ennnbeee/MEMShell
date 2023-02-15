@@ -27,7 +27,7 @@ Function Remove-AppAppCategory() {
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Delete
+        Invoke-MEMRestMethod -Uri $uri -Method Delete
     }
     catch {
         $exs = $Error.ErrorDetails

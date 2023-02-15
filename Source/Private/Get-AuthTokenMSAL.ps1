@@ -11,15 +11,14 @@ Function Get-AuthTokenMSAL {
     .NOTES
     NAME: Get-AuthTokenMSAL
     #>
-    
+
     [cmdletbinding()]
-    
     param
     (
         [Parameter(Mandatory = $true)]
         $User
     )
-    
+
     $userUpn = New-Object 'System.Net.Mail.MailAddress' -ArgumentList $User
     if ($userUpn.Host -like '*onmicrosoft.com*') {
         $tenant = Read-Host -Prompt 'Please specify your Tenant name i.e. company.com'
@@ -28,7 +27,7 @@ Function Get-AuthTokenMSAL {
     else {
         $tenant = $userUpn.Host
     }
-    
+
     Write-Host 'Checking for MSAL.PS module...'
     $MSALModule = Get-Module -Name 'MSAL.PS' -ListAvailable
     if ($null -eq $MSALModule) {
@@ -47,11 +46,11 @@ Function Get-AuthTokenMSAL {
             $MSALModule = $MSALModule | Select-Object -Unique
         }
     }
-        
+
     $ClientId = 'd1ddf0e4-d672-4dae-b554-9d5bdfd93547'
     $RedirectUri = 'urn:ietf:wg:oauth:2.0:oob'
     $Authority = "https://login.microsoftonline.com/$Tenant"
-    
+
     try {
         Import-Module $MSALModule.Name
         if ($PSVersionTable.PSVersion.Major -ne 7) {

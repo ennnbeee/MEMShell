@@ -1,5 +1,5 @@
 Function Get-MEMGroup() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,7 +11,7 @@ Function Get-MEMGroup() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
 
     param
@@ -19,10 +19,10 @@ Function Get-MEMGroup() {
         [parameter(Mandatory = $true)]
         [string]$GroupName
     )
-    
+
     $graphApiVersion = 'beta'
     $Resource = 'groups'
-    
+
     try {
         $authToken['ConsistencyLevel'] = 'eventual'
         $searchterm = 'search="displayName:' + $GroupName + '"'
@@ -37,5 +37,5 @@ Function Get-MEMGroup() {
         Write-Error "Request to $Uri failed with HTTP Status $($ex.Message)"
         Write-Host
         break
-    }  
+    }
 }

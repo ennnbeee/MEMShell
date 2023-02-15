@@ -1,5 +1,5 @@
 Function Get-DeviceFilter() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,15 +11,15 @@ Function Get-DeviceFilter() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
-    
+
     $graphApiVersion = 'beta'
     $Resource = 'deviceManagement/assignmentFilters'
-    
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

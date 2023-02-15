@@ -1,5 +1,5 @@
 Function Get-DeviceSettingsCatalogProfile() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,9 +11,9 @@ Function Get-DeviceSettingsCatalogProfile() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
-    
+
     param
     (
         [parameter(Mandatory = $false)]
@@ -21,7 +21,7 @@ Function Get-DeviceSettingsCatalogProfile() {
         [ValidateNotNullOrEmpty()]
         [string]$Platform
     )
-    
+
     $graphApiVersion = 'beta'
     if ($Platform) {
         $Resource = "deviceManagement/configurationPolicies?`$filter=platforms has '$Platform' and technologies has 'mdm'"
@@ -32,7 +32,7 @@ Function Get-DeviceSettingsCatalogProfile() {
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

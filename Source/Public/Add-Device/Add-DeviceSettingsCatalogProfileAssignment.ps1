@@ -69,7 +69,7 @@ Function Add-DeviceSettingsCatalogProfileAssignment() {
 
         # POST to Graph Service
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Post -Body $JSON -ContentType 'application/json'
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
     }
     catch {
         $exs = $Error.ErrorDetails

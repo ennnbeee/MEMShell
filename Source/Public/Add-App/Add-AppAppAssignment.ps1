@@ -13,7 +13,6 @@ Function Add-ApplicationAssignment() {
     #>
 
     [cmdletbinding()]
-
     param
     (
         [parameter(Mandatory = $true)]

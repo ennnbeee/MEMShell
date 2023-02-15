@@ -25,7 +25,7 @@ Function Get-DeviceManagementScriptAssignment() {
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails

@@ -32,7 +32,7 @@ Function Add-EnrolmentADEProfileAssignment() {
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Post -Body $JSON -ContentType 'application/json'
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
     }
     catch {
         $exs = $Error.ErrorDetails

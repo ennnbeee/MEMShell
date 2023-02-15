@@ -11,16 +11,16 @@ Function Get-DeviceEndpointSecProfile() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-    
+
     [cmdletbinding()]
 
     $graphApiVersion = 'Beta'
     $Resource = 'deviceManagement/intents'
-    
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        (Invoke-RestMethod -Method Get -Uri $uri -Headers $authToken).value
-    
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+
     }
     catch {
         $exs = $Error.ErrorDetails

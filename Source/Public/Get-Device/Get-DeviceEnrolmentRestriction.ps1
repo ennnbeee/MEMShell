@@ -1,5 +1,5 @@
 Function Get-DeviceEnrollRestriction() {
-    
+
     <#
     .SYNOPSIS
     This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
@@ -11,15 +11,15 @@ Function Get-DeviceEnrollRestriction() {
     .NOTES
     NAME: Get-DeviceEnrollmentConfigurations
     #>
-        
+
     [cmdletbinding()]
-        
+
     $graphApiVersion = 'Beta'
     $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
-            
+
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error.ErrorDetails
