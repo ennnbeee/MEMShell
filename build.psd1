@@ -1,4 +1,9 @@
-# Grab nuget bits, install modules, set build variables, start build.
-Get-PackageProvider -Name NuGet -ForceBootstrap | Out-Null
-
-Resolve-Module Psake, PSDeploy, Pester, BuildHelpers
+# Use this file to override the default parameter values used by the `Build-Module`
+# command when building the module (see `Get-Help Build-Module -Full` for details).
+@{
+    ModuleManifest  = "MEMShell.psd1"
+    # Subsequent relative paths are to the ModuleManifest
+    OutputDirectory = "../Output/MEMShell"
+    VersionedOutputDirectory = $true
+    CopyDirectories = @('')
+}
