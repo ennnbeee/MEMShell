@@ -1,4 +1,4 @@
-Function Update-DeviceAutopilot() {
+Function Update-DeviceAP() {
 
     <#
     .SYNOPSIS

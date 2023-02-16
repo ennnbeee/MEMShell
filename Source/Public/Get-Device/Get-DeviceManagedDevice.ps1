@@ -1,4 +1,4 @@
-Function Get-DeviceDevice() {
+Function Get-DeviceManagedDevice() {
 
     <#
     .SYNOPSIS

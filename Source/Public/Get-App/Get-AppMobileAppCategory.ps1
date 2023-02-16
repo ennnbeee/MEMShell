@@ -1,4 +1,4 @@
-Function Get-DeviceManagementScriptAssignment() {
+Function Get-AppMobileAppCategory() {
 
     <#
     .SYNOPSIS
@@ -13,7 +13,6 @@ Function Get-DeviceManagementScriptAssignment() {
     #>
 
     [cmdletbinding()]
-
     param
     (
         [Parameter(Mandatory = $true)]
@@ -21,10 +20,10 @@ Function Get-DeviceManagementScriptAssignment() {
     )
 
     $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceManagementScripts'
+    $Resource = "deviceAppManagement/mobileApps/$Id/categories"
 
     try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
         Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {

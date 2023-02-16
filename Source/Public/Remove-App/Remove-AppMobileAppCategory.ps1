@@ -1,4 +1,4 @@
-Function Invoke-AppManagedGooglePlayAppSync() {
+Function Remove-AppMobileAppCategory() {
 
     <#
     .SYNOPSIS
@@ -12,15 +12,23 @@ Function Invoke-AppManagedGooglePlayAppSync() {
     NAME: Get-AuthTokenMSAL
     #>
 
-    [cmdletbinding()]
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $Id,
+        [Parameter(Mandatory = $true)]
+        $CategoryId
+    )
 
     $graphApiVersion = 'Beta'
-    $Resource = '/deviceManagement/androidManagedStoreAccountEnterpriseSettings/syncApps'
+    $Resource = "deviceAppManagement/mobileApps/$Id/categories/$CategoryId/`$ref"
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post
-
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
     }
     catch {
         $exs = $Error

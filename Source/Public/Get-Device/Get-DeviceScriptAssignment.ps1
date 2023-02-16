@@ -1,4 +1,4 @@
-Function Remove-AppAppCategory() {
+Function Get-DeviceScriptAssignment() {
 
     <#
     .SYNOPSIS
@@ -12,23 +12,20 @@ Function Remove-AppAppCategory() {
     NAME: Get-AuthTokenMSAL
     #>
 
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [cmdletbinding()]
+
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
-        [Parameter(Mandatory = $true)]
-        $CategoryId
+        $Id
     )
 
     $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/categories/$CategoryId/`$ref"
+    $Resource = 'deviceManagement/deviceManagementScripts'
 
     try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error

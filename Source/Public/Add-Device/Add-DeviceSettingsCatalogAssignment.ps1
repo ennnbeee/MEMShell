@@ -1,4 +1,4 @@
-Function Add-DeviceSettingsCatalogProfileAssignment() {
+Function Add-DeviceSettingsCatalogAssignment() {
 
     <#
     .SYNOPSIS

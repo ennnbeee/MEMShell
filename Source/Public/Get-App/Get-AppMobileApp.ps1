@@ -1,4 +1,4 @@
-Function Get-EnrolmentAutopilotProfile() {
+Function Get-AppMobileApp() {
 
     <#
     .SYNOPSIS
@@ -15,7 +15,7 @@ Function Get-EnrolmentAutopilotProfile() {
     [cmdletbinding()]
 
     $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
+    $Resource = 'deviceAppManagement/mobileApps'
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"

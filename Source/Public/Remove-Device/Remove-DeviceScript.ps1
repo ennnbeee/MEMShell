@@ -1,4 +1,4 @@
-Function Remove-DeviceManagementScript() {
+Function Remove-DeviceManagement() {
 
     <#
     .SYNOPSIS

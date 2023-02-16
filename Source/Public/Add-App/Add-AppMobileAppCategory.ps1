@@ -1,4 +1,4 @@
-Function Add-AppAppCategory() {
+Function Add-AppMobileAppCategory() {
 
     <#
     .SYNOPSIS

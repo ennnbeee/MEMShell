@@ -1,4 +1,4 @@
-Function Remove-AppAppAssignment() {
+Function Start-AppGooglePlayAppSync() {
 
     <#
     .SYNOPSIS
@@ -12,23 +12,15 @@ Function Remove-AppAppAssignment() {
     NAME: Get-AuthTokenMSAL
     #>
 
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        [parameter(Mandatory = $true)]
-        $AssignmentId
-    )
+    [cmdletbinding()]
 
     $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/assignments/$AssignmentId"
+    $Resource = '/deviceManagement/androidManagedStoreAccountEnterpriseSettings/syncApps'
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
+        Invoke-MEMRestMethod -Uri $uri -Method Post
+
     }
     catch {
         $exs = $Error

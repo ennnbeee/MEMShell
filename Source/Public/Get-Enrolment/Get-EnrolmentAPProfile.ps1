@@ -1,4 +1,4 @@
-Function Get-AppAppAssignment() {
+Function Get-EnrolmentAPProfile() {
 
     <#
     .SYNOPSIS
@@ -14,14 +14,8 @@ Function Get-AppAppAssignment() {
 
     [cmdletbinding()]
 
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
     $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/?`$expand=categories,assignments"
+    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"

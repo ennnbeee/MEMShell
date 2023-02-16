@@ -1,4 +1,4 @@
-Function Remove-DeviceSettingsCatalogProfile() {
+Function Remove-DeviceSettingsCatalog() {
 
     <#
     .SYNOPSIS

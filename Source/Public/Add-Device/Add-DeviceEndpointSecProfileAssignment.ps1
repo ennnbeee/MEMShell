@@ -1,4 +1,4 @@
-Function Add-DeviceEndpointSecProfileAssignment() {
+Function Add-DeviceEndpointSecurityAssignment() {
 
     <#
     .SYNOPSIS

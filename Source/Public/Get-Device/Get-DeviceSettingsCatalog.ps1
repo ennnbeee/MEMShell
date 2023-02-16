@@ -1,4 +1,4 @@
-Function Get-AppApp() {
+Function Get-DeviceSettingsCatalog() {
 
     <#
     .SYNOPSIS
@@ -14,8 +14,21 @@ Function Get-AppApp() {
 
     [cmdletbinding()]
 
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/mobileApps'
+    param
+    (
+        [parameter(Mandatory = $false)]
+        [ValidateSet('windows10', 'macOS')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Platform
+    )
+
+    $graphApiVersion = 'beta'
+    if ($Platform) {
+        $Resource = "deviceManagement/configurationPolicies?`$filter=platforms has '$Platform' and technologies has 'mdm'"
+    }
+    else {
+        $Resource = "deviceManagement/configurationPolicies?`$filter=technologies has 'mdm'"
+    }
 
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"

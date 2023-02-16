@@ -1,4 +1,4 @@
-Function Update-DeviceDeviceName() {
+Function Update-DeviceManagedDeviceName() {
 
     <#
     .SYNOPSIS

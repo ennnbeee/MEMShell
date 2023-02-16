@@ -1,4 +1,4 @@
-Function Get-EnrolmentAutopilotProfileAssignment() {
+Function New-DeviceSettingCatalog() {
 
     <#
     .SYNOPSIS
@@ -12,20 +12,22 @@ Function Get-EnrolmentAutopilotProfileAssignment() {
     NAME: Get-DeviceEnrollmentConfigurations
     #>
 
-    [cmdletbinding()]
-
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
     param
     (
-        [Parameter(Mandatory = $true)]
-        $Id
+        [parameter(Mandatory = $true)]
+        $JSON
     )
 
     $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
+    $Resource = 'deviceManagement/configurationPolicies'
 
     try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
     }
     catch {
         $exs = $Error

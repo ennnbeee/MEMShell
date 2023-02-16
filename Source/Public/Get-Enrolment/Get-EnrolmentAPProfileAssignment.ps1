@@ -1,4 +1,4 @@
-Function Get-DeviceSettingsCatalogProfile() {
+Function Get-EnrolmentAPProfileAssignment() {
 
     <#
     .SYNOPSIS
@@ -16,22 +16,15 @@ Function Get-DeviceSettingsCatalogProfile() {
 
     param
     (
-        [parameter(Mandatory = $false)]
-        [ValidateSet('windows10', 'macOS')]
-        [ValidateNotNullOrEmpty()]
-        [string]$Platform
+        [Parameter(Mandatory = $true)]
+        $Id
     )
 
-    $graphApiVersion = 'beta'
-    if ($Platform) {
-        $Resource = "deviceManagement/configurationPolicies?`$filter=platforms has '$Platform' and technologies has 'mdm'"
-    }
-    else {
-        $Resource = "deviceManagement/configurationPolicies?`$filter=technologies has 'mdm'"
-    }
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
 
     try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
         Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {

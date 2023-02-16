@@ -1,4 +1,4 @@
-Function Add-ApplicationAssignment() {
+Function Add-AppMobileAppAssignment() {
 
     <#
     .SYNOPSIS
