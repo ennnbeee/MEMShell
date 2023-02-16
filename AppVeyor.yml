@@ -5,4 +5,4 @@ environment:
     secure: 63BTqYusymH5/ALmvMgmn/gVk02DkZkco0XwmTT4X7c=
 
 skip_commits:
-  message: /*minor*/
+  message: /*test*/
