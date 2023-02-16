@@ -1,0 +1,7 @@
+environment:
+  PSGalleryKey:
+    secure: CEgDQYqkE53cFRss0b8f2I/GGI1Bk1pF/83yatHaJRqKQow88mKoKOeN9lgZKdAv
+  NuGetApiKey:
+    secure: 63BTqYusymH5/ALmvMgmn/gVk02DkZkco0XwmTT4X7c=
+test_script:
+  - ps: . .\build.ps1
