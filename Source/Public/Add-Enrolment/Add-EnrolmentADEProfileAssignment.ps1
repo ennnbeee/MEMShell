@@ -16,11 +16,13 @@ Function Add-EnrolmentADEProfileAssignment() {
 
     Param(
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
-        $ProfileID,
+        [string]$ProfileID,
+
         [Parameter(Mandatory = $true)]
-        $DeviceSerials
+        [string]$DeviceSerials
     )
 
     $graphApiVersion = 'Beta'

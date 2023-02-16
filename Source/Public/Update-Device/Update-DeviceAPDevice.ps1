@@ -15,9 +15,10 @@ Function Update-DeviceAP() {
     [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
     param(
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
-        $GroupTag
+        [string]$GroupTag
     )
 
     $graphApiVersion = 'Beta'

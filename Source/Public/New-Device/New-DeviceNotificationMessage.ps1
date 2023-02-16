@@ -16,7 +16,7 @@ Function New-DeviceNotificationMessageNew-DeviceNotificationMessage() {
     param
     (
         [parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
         [parameter(Mandatory = $true)]
         $JSON
     )

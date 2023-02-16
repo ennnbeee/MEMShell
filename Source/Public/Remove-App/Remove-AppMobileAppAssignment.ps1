@@ -16,9 +16,9 @@ Function Remove-AppMobileAppAssignment() {
     param
     (
         [parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
         [parameter(Mandatory = $true)]
-        $AssignmentId
+        [string]$AssignmentId
     )
 
     $graphApiVersion = 'Beta'

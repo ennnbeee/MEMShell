@@ -1,4 +1,4 @@
-﻿#Region './Private/Export-JSONData.ps1' 0
+﻿#Region '.\Private\Export-JSONData.ps1' 0
 Function Export-JSONData() {
 
     <#
@@ -13,11 +13,13 @@ Function Export-JSONData() {
     NAME: Export-JSONData
     #>
 
+    [cmdletbinding()]
     param (
         [parameter(Mandatory = $true)]
         $JSON,
+
         [parameter(Mandatory = $true)]
-        $ExportPath
+        [string]$ExportPath
     )
 
     try {
@@ -43,8 +45,8 @@ Function Export-JSONData() {
         $_.Exception
     }
 }
-#EndRegion './Private/Export-JSONData.ps1' 45
-#Region './Private/Get-AuthTokenMSAL.ps1' 0
+#EndRegion '.\Private\Export-JSONData.ps1' 46
+#Region '.\Private\Get-AuthTokenMSAL.ps1' 0
 Function Get-AuthTokenMSAL {
 
     <#
@@ -63,7 +65,7 @@ Function Get-AuthTokenMSAL {
     param
     (
         [Parameter(Mandatory = $true)]
-        $User
+        [string]$User
     )
 
     $userUpn = New-Object 'System.Net.Mail.MailAddress' -ArgumentList $User
@@ -127,8 +129,8 @@ Function Get-AuthTokenMSAL {
         break
     }
 }
-#EndRegion './Private/Get-AuthTokenMSAL.ps1' 83
-#Region './Private/Invoke-MEMRestMethod.ps1' 0
+#EndRegion '.\Private\Get-AuthTokenMSAL.ps1' 82
+#Region '.\Private\Invoke-MEMRestMethod.ps1' 0
 Function Invoke-MEMRestMethod() {
 
     <#
@@ -147,11 +149,14 @@ Function Invoke-MEMRestMethod() {
     param (
         [parameter(Mandatory = $true)]
         [uri]$Uri,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Delete', 'Get', 'Patch', 'Post', 'Put')]
-        $Method,
-        $Body,
-        $ContentType = 'application/json'
+        [string]$Method,
+
+        [string]$Body,
+
+        [string]$ContentType = 'application/json'
     )
 
     if ($global:authToken) {
@@ -234,8 +239,8 @@ Function Invoke-MEMRestMethod() {
         break
     }
 }
-#EndRegion './Private/Invoke-MEMRestMethod.ps1' 106
-#Region './Private/Test-AppBundleId.ps1' 0
+#EndRegion '.\Private\Invoke-MEMRestMethod.ps1' 108
+#Region '.\Private\Test-AppBundleId.ps1' 0
 Function Test-AppBundleId() {
 
     <#
@@ -253,7 +258,7 @@ Function Test-AppBundleId() {
     [cmdletbinding()]
     param (
         [Parameter(Mandatory = $true)]
-        $bundleId
+        [string]$bundleId
     )
 
     $graphApiVersion = 'Beta'
@@ -279,8 +284,8 @@ Function Test-AppBundleId() {
         return [OutputType('System.Boolean')]$false
     }
 }
-#EndRegion './Private/Test-AppBundleId.ps1' 44
-#Region './Private/Test-AppPackageId.ps1' 0
+#EndRegion '.\Private\Test-AppBundleId.ps1' 43
+#Region '.\Private\Test-AppPackageId.ps1' 0
 Function Test-AppPackageId() {
 
     <#
@@ -298,7 +303,7 @@ Function Test-AppPackageId() {
     [cmdletbinding()]
     param (
         [Parameter(Mandatory = $true)]
-        $packageId
+        [string]$packageId
     )
 
     $graphApiVersion = 'Beta'
@@ -325,8 +330,8 @@ Function Test-AppPackageId() {
         return [OutputType('System.Boolean')]$false
     }
 }
-#EndRegion './Private/Test-AppPackageId.ps1' 45
-#Region './Private/Test-MEMJSON.ps1' 0
+#EndRegion '.\Private\Test-AppPackageId.ps1' 44
+#Region '.\Private\Test-MEMJSON.ps1' 0
 Function Test-MEMJSON() {
 
     <#
@@ -362,8 +367,8 @@ Function Test-MEMJSON() {
         break
     }
 }
-#EndRegion './Private/Test-MEMJSON.ps1' 36
-#Region './Private/Write-MEMLog.ps1' 0
+#EndRegion '.\Private\Test-MEMJSON.ps1' 35
+#Region '.\Private\Write-MEMLog.ps1' 0
 Function Write-MEMLog {
 
     <#
@@ -413,2432 +418,8 @@ Function Write-MEMLog {
     # Write the line to the log file
     Add-Content -Path $Path -Value $Content
 }
-#EndRegion './Private/Write-MEMLog.ps1' 50
-#Region './Public/New-App/New-AppConfigPolicyApp.ps1' 0
-Function New-AppConfigPolicyApp() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/targetedManagedAppConfigurations'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-App/New-AppConfigPolicyApp.ps1' 39
-#Region './Public/New-App/New-AppConfigPolicyDevice.ps1' 0
-Function New-AppConfigPolicyDevice() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/mobileAppConfigurations'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-App/New-AppConfigPolicyDevice.ps1' 39
-#Region './Public/New-App/New-AppManagedGooglePlayApp.ps1' 0
-Function New-AppManagedGooglePlayApp() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/androidManagedStoreAccountEnterpriseSettings/approveApps'
-
-    try {
-        $Id = 'app:' + $Id
-        $Packages = New-Object -TypeName psobject
-        $Packages | Add-Member -MemberType NoteProperty -Name 'approveAllPermissions' -Value 'true'
-        $Packages | Add-Member -MemberType NoteProperty -Name 'packageIds' -Value @($Id)
-        $JSON = $Packages | ConvertTo-Json -Depth 3
-
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-App/New-AppManagedGooglePlayApp.ps1' 44
-#Region './Public/New-App/New-AppProtectionPolicy.ps1' 0
-Function New-AppProtectionPolicy() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/managedAppPolicies'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-App/New-AppProtectionPolicy.ps1' 39
-#Region './Public/Get-Enrolment/Get-EnrolmentADEProfile.ps1' 0
-Function Get-EnrolmentADEProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    Param(
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/depOnboardingSettings/$Id/enrollmentProfiles"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Enrolment/Get-EnrolmentADEProfile.ps1' 36
-#Region './Public/Get-Enrolment/Get-EnrolmentADEToken.ps1' 0
-Function Get-EnrolmentADEToken() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/depOnboardingSettings'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Enrolment/Get-EnrolmentADEToken.ps1' 30
-#Region './Public/Get-Enrolment/Get-EnrolmentAPProfile.ps1' 0
-Function Get-EnrolmentAPProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Enrolment/Get-EnrolmentAPProfile.ps1' 31
-#Region './Public/Get-Enrolment/Get-EnrolmentAPProfileAssignment.ps1' 0
-Function Get-EnrolmentAPProfileAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Enrolment/Get-EnrolmentAPProfileAssignment.ps1' 37
-#Region './Public/Get-Enrolment/Get-EnrolmentESP.ps1' 0
-Function Get-EnrolmentESP() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Enrolment/Get-EnrolmentESP.ps1' 31
-#Region './Public/Get-Enrolment/Get-EnrolmentESPAssignment.ps1' 0
-Function Get-EnrolmentESPAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Enrolment/Get-EnrolmentESPAssignment.ps1' 37
-#Region './Public/Add-Enrolment/Add-EnrolmentADEProfileAssignment.ps1' 0
-Function Add-EnrolmentADEProfileAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    Param(
-        [Parameter(Mandatory = $true)]
-        $Id,
-        [Parameter(Mandatory = $true)]
-        $ProfileID,
-        [Parameter(Mandatory = $true)]
-        $DeviceSerials
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/depOnboardingSettings/$Id/enrollmentProfiles('$ProfileID')/updateDeviceProfileAssignment"
-
-    $Output = New-Object -TypeName psobject
-    $Output | Add-Member -MemberType NoteProperty -Name 'deviceIds' -Value $DeviceSerials
-    $JSON = $Output | ConvertTo-Json -Depth 3
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Enrolment/Add-EnrolmentADEProfileAssignment.ps1' 44
-#Region './Public/Add-Enrolment/Add-EnrolmentAutopilotProfileAssignment.ps1' 0
-Function Add-EnrolmentAutopilotProfileAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        [parameter(Mandatory = $true)]
-        $TargetGroupId,
-        [parameter(Mandatory = $true)]
-        [ValidateSet('Include', 'Exclude')]
-        $AssignmentType
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/windowsAutopilotDeploymentProfiles/$Id/assignments"
-
-    try {
-        $TargetGroup = New-Object -TypeName psobject
-
-        if ($AssignmentType -eq 'Exclude') {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
-        }
-        elseif ($AssignmentType -eq 'Include') {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
-        }
-
-        $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
-
-        $Target = New-Object -TypeName psobject
-        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
-
-        $JSON = $Target | ConvertTo-Json -Depth 3
-
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Enrolment/Add-EnrolmentAutopilotProfileAssignment.ps1' 58
-#Region './Public/Add-Enrolment/Add-EnrolmentESPAssignment.ps1' 0
-Function Add-EnrolmentESPAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
-        [parameter(Mandatory = $true)]
-        [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        $FilterMode,
-        [ValidateSet('Users', 'Devices')]
-        $All
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/deviceEnrollmentConfigurations/$Id/assign"
-
-    try {
-        $TargetGroup = New-Object -TypeName psobject
-
-        if ($TargetGroupId) {
-            if ($AssignmentType -eq 'Exclude') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
-            }
-            elseif ($AssignmentType -eq 'Include') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
-            }
-
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
-        }
-
-        else {
-            if ($All -eq 'Users') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
-            ElseIf ($All -eq 'Devices') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
-            }
-        }
-
-        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
-        }
-
-        $Target = New-Object -TypeName psobject
-        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
-
-        $Output = New-Object -TypeName psobject
-        $Output | Add-Member -MemberType NoteProperty -Name 'enrollmentConfigurationAssignments' -Value @($Target)
-        $JSON = $Output | ConvertTo-Json -Depth 3
-
-        # POST to Graph Service
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Enrolment/Add-EnrolmentESPAssignment.ps1' 80
-#Region './Public/Add-Enrolment/Add-EnrolmentRestrictionAssignment.ps1' 0
-Function Add-EnrolmentRestrictionAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
-        [parameter(Mandatory = $true)]
-        [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        $FilterMode,
-        [ValidateSet('Users', 'Devices')]
-        $All
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/deviceEnrollmentConfigurations/$Id/assign"
-
-    try {
-        $TargetGroup = New-Object -TypeName psobject
-
-        if ($TargetGroupId) {
-            if ($AssignmentType -eq 'Exclude') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
-            }
-            elseif ($AssignmentType -eq 'Include') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
-            }
-
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
-        }
-        else {
-            if ($All -eq 'Users') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
-            ElseIf ($All -eq 'Devices') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
-            }
-        }
-
-        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
-        }
-
-        $Target = New-Object -TypeName psobject
-        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
-
-        # Creating JSON object to pass to Graph
-        $Output = New-Object -TypeName psobject
-        $Output | Add-Member -MemberType NoteProperty -Name 'enrollmentConfigurationAssignments' -Value @($Target)
-        $JSON = $Output | ConvertTo-Json -Depth 3
-
-        # POST to Graph Service
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Enrolment/Add-EnrolmentRestrictionAssignment.ps1' 80
-#Region './Public/Add-Device/Add-DeviceCompliancePolicyAssignment.ps1' 0
-Function Add-DeviceCompliancePolicyAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
-        [parameter(Mandatory = $true)]
-        [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        $FilterMode,
-        [ValidateSet('Users', 'Devices')]
-        $All
-    )
-
-    $graphApiVersion = 'v1.0'
-    $Resource = "deviceManagement/deviceCompliancePolicies/$Id/assign"
-
-    try {
-        $TargetGroup = New-Object -TypeName psobject
-
-        if ($TargetGroupId) {
-            if ($AssignmentType -eq 'Exclude') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
-            }
-            elseif ($AssignmentType -eq 'Include') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
-            }
-
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
-
-        }
-        else {
-            if ($All -eq 'Users') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
-            ElseIf ($All -eq 'Devices') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
-            }
-        }
-
-        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
-        }
-
-        $Target = New-Object -TypeName psobject
-        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
-
-        $TargetGroups = $Target
-
-        # Creating JSON object to pass to Graph
-        $Output = New-Object -TypeName psobject
-        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
-        $JSON = $Output | ConvertTo-Json -Depth 3
-
-        # POST to Graph Service
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Device/Add-DeviceCompliancePolicyAssignment.ps1' 83
-#Region './Public/Add-Device/Add-DeviceConfigProfileAssignment.ps1' 0
-Function Add-DeviceConfigProfileAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
-        [parameter(Mandatory = $true)]
-        [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        [ValidateSet('Include', 'Exclude')]
-        $FilterMode,
-        [ValidateSet('Users', 'Devices')]
-        $All
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/deviceConfigurations/$Id/assign"
-
-    try {
-        $TargetGroup = New-Object -TypeName psobject
-
-        if ($TargetGroupId) {
-            if ($AssignmentType -eq 'Exclude') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
-            }
-            elseif ($AssignmentType -eq 'Include') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
-            }
-
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
-        }
-
-        else {
-            if ($All -eq 'Users') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
-            ElseIf ($All -eq 'Devices') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
-            }
-        }
-
-        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
-        }
-
-        $Target = New-Object -TypeName psobject
-        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
-
-        $TargetGroups += $Target
-
-        $Output = New-Object -TypeName psobject
-        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
-        $JSON = $Output | ConvertTo-Json -Depth 3
-
-        # POST to Graph Service
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Device/Add-DeviceConfigProfileAssignment.ps1' 83
-#Region './Public/Add-Device/Add-DeviceEndpointSecProfileAssignment.ps1' 0
-Function Add-DeviceEndpointSecurityAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
-        [parameter(Mandatory = $true)]
-        [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        $FilterMode,
-        [ValidateSet('Users', 'Devices')]
-        $All
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/intents/$Id/assign"
-
-    try {
-        $TargetGroup = New-Object -TypeName psobject
-
-        if ($TargetGroupId) {
-            if ($AssignmentType -eq 'Exclude') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
-            }
-            elseif ($AssignmentType -eq 'Include') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
-            }
-
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value "$TargetGroupId"
-        }
-        else {
-            if ($All -eq 'Users') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
-            ElseIf ($All -eq 'Devices') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
-            }
-        }
-
-        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
-        }
-
-        $Target = New-Object -TypeName psobject
-        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
-
-        $TargetGroups = $Target
-
-        $Output = New-Object -TypeName psobject
-        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
-        $JSON = $Output | ConvertTo-Json -Depth 3
-
-        # POST to Graph Service
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Device/Add-DeviceEndpointSecProfileAssignment.ps1' 81
-#Region './Public/Add-Device/Add-DeviceSettingsCatalogAssignment.ps1' 0
-Function Add-DeviceSettingsCatalogAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
-        [parameter(Mandatory = $true)]
-        [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        $FilterMode,
-        [ValidateSet('Users', 'Devices')]
-        $All
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/configurationPolicies/$Id/assign"
-
-    try {
-        $TargetGroup = New-Object -TypeName psobject
-
-        if ($TargetGroupId) {
-            if ($AssignmentType -eq 'Exclude') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
-            }
-            elseif ($AssignmentType -eq 'Include') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
-            }
-
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
-        }
-        else {
-            if ($All -eq 'Users') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
-            ElseIf ($All -eq 'Devices') {
-                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
-            }
-        }
-
-        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
-            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
-        }
-
-        $Target = New-Object -TypeName psobject
-        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
-
-        $TargetGroups = $Target
-
-        $Output = New-Object -TypeName psobject
-        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
-        $JSON = $Output | ConvertTo-Json -Depth 3
-
-        # POST to Graph Service
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Add-Device/Add-DeviceSettingsCatalogAssignment.ps1' 81
-#Region './Public/Remove-App/Remove-AppConfigPolicyApp.ps1' 0
-Function Remove-AppConfigPolicyApp() {
-
-    <#
-    .SYNOPSIS
-    This function is used to remove Managed App policies from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and removes managed app policies
-    .EXAMPLE
-    Remove-AppConfigPolicyApp -id $id
-    Removes a managed app policy configured in Intune
-    .NOTES
-    NAME: Remove-AppConfigPolicyApp
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/targetedManagedAppConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-App/Remove-AppConfigPolicyApp.ps1' 38
-#Region './Public/Remove-App/Remove-AppConfigPolicyDevice.ps1' 0
-Function Remove-AppConfigPolicyDevice() {
-
-    <#
-    .SYNOPSIS
-    This function is used to remove Managed App policies from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and removes managed app policies
-    .EXAMPLE
-    Remove-AppConfigPolicyDevice -id $id
-    Removes a managed app policy configured in Intune
-    .NOTES
-    NAME: Remove-AppConfigPolicyDevice
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/mobileAppConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-App/Remove-AppConfigPolicyDevice.ps1' 38
-#Region './Public/Remove-App/Remove-AppMobileAppAssignment.ps1' 0
-Function Remove-AppMobileAppAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        [parameter(Mandatory = $true)]
-        $AssignmentId
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/assignments/$AssignmentId"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-App/Remove-AppMobileAppAssignment.ps1' 40
-#Region './Public/Remove-App/Remove-AppMobileAppCategory.ps1' 0
-Function Remove-AppMobileAppCategory() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id,
-        [Parameter(Mandatory = $true)]
-        $CategoryId
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/categories/$CategoryId/`$ref"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-App/Remove-AppMobileAppCategory.ps1' 40
-#Region './Public/Remove-App/Remove-AppProtectionPolicy.ps1' 0
-Function Remove-AppProtectionPolicy() {
-
-    <#
-    .SYNOPSIS
-    This function is used to remove Managed App policies from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and removes managed app policies
-    .EXAMPLE
-    Remove-ManagedAppPolicy -id $id
-    Removes a managed app policy configured in Intune
-    .NOTES
-    NAME: Remove-ManagedAppPolicy
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/managedAppPolicies'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-App/Remove-AppProtectionPolicy.ps1' 38
-#Region './Public/Get-Device/Get-DeviceAutopilot.ps1' 0
-Function Get-DeviceAutopilot() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get autopilot devices via the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets any autopilot devices
-    .EXAMPLE
-    Get-AutopilotDevices
-    Returns any autopilot devices
-    .NOTES
-    NAME: Get-AutopilotDevices
-    #>
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/windowsAutopilotDeviceIdentities'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceAutopilot.ps1' 30
-#Region './Public/Get-Device/Get-DeviceCompliancePolicy.ps1' 0
-Function Get-DeviceCompliancePolicy() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceCompliancePolicies'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceCompliancePolicy.ps1' 31
-#Region './Public/Get-Device/Get-DeviceCompliancePolicyScript.ps1' 0
-Function Get-DeviceCompliancePolicyScript() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceComplianceScripts'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceCompliancePolicyScript.ps1' 31
-#Region './Public/Get-Device/Get-DeviceConfigProfile.ps1' 0
-Function Get-DeviceConfigProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'beta'
-    $Resource = 'deviceManagement/deviceConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceConfigProfile.ps1' 31
-#Region './Public/Get-Device/Get-DeviceConfigProfileAssignment.ps1' 0
-Function Get-DeviceConfigProfileAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceConfigProfileAssignment.ps1' 37
-#Region './Public/Get-Device/Get-DeviceEndpointSecProfile.ps1' 0
-Function Get-DeviceEndpointSecProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/intents'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceEndpointSecProfile.ps1' 32
-#Region './Public/Get-Device/Get-DeviceEndpointSecTemplate.ps1' 0
-Function Get-DeviceEndpointSecTemplate() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/templates?`$filter=(isof(%27microsoft.graph.securityBaselineTemplate%27))"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceEndpointSecTemplate.ps1' 31
-#Region './Public/Get-Device/Get-DeviceEnrolmentRestriction.ps1' 0
-Function Get-DeviceEnrollRestriction() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceEnrolmentRestriction.ps1' 31
-#Region './Public/Get-Device/Get-DeviceFilter.ps1' 0
-Function Get-DeviceFilter() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'beta'
-    $Resource = 'deviceManagement/assignmentFilters'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceFilter.ps1' 31
-#Region './Public/Get-Device/Get-DeviceManagedDevice.ps1' 0
-Function Get-DeviceManagedDevice() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-    param
-    (
-        [switch]$IncludeEAS,
-        [switch]$ExcludeMDM
-    )
-
-    $graphApiVersion = 'beta'
-    $Resource = 'deviceManagement/managedDevices'
-
-    try {
-        $Count_Params = 0
-
-        if ($IncludeEAS.IsPresent) { $Count_Params++ }
-        if ($ExcludeMDM.IsPresent) { $Count_Params++ }
-        if ($Count_Params -gt 1) {
-            Write-Warning 'Multiple parameters set, specify a single parameter -IncludeEAS, -ExcludeMDM or no parameter against the function'
-            break
-        }
-        elseif ($IncludeEAS) {
-            $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource"
-        }
-        elseif ($ExcludeMDM) {
-            $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource`?`$filter=managementAgent eq 'eas'"
-        }
-        else {
-            $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource`?`$filter=managementAgent eq 'mdm' and managementAgent eq 'easmdm'"
-        }
-
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceManagedDevice.ps1' 53
-#Region './Public/Get-Device/Get-DeviceNotificationMessage.ps1' 0
-Function Get-DeviceNotificationMessage() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-    param(
-        [parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/notificationMessageTemplates/$Id/localizedNotificationMessages"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceNotificationMessage.ps1' 35
-#Region './Public/Get-Device/Get-DeviceNotificationTemplate.ps1' 0
-Function Get-DeviceNotificationTemplate() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/notificationMessageTemplates'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceNotificationTemplate.ps1' 31
-#Region './Public/Get-Device/Get-DeviceScript.ps1' 0
-Function Get-DeviceScript() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    param (
-
-        [Parameter(Mandatory = $true)]
-        $Id
-
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceManagementScripts'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource/$Id"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceScript.ps1' 38
-#Region './Public/Get-Device/Get-DeviceScriptAssignment.ps1' 0
-Function Get-DeviceScriptAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceManagementScripts'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceScriptAssignment.ps1' 37
-#Region './Public/Get-Device/Get-DeviceSettingsCatalog.ps1' 0
-Function Get-DeviceSettingsCatalog() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [parameter(Mandatory = $false)]
-        [ValidateSet('windows10', 'macOS')]
-        [ValidateNotNullOrEmpty()]
-        [string]$Platform
-    )
-
-    $graphApiVersion = 'beta'
-    if ($Platform) {
-        $Resource = "deviceManagement/configurationPolicies?`$filter=platforms has '$Platform' and technologies has 'mdm'"
-    }
-    else {
-        $Resource = "deviceManagement/configurationPolicies?`$filter=technologies has 'mdm'"
-    }
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceSettingsCatalog.ps1' 44
-#Region './Public/Get-Device/Get-DeviceUpdatePolicy.ps1' 0
-Function Get-DeviceUpdatePolicy() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [switch]$Windows10,
-        [switch]$iOS,
-        [switch]$macOS
-    )
-
-    $graphApiVersion = 'Beta'
-
-    try {
-        $Count_Params = 0
-        if ($iOS.IsPresent) { $Count_Params++ }
-        if ($Windows10.IsPresent) { $Count_Params++ }
-        if ($macOS.IsPresent) { $Count_Params++ }
-        if ($Count_Params -gt 1) {
-            Write-Error 'Multiple parameters set, specify a single parameter -iOS or -Windows10 or -macOS against the function'
-            break
-        }
-        elseif ($Count_Params -eq 0) {
-            Write-Error 'Parameter -iOS or -Windows10 or -macOS required against the function...'
-            break
-        }
-        elseif ($Windows10) {
-            $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.windowsUpdateForBusinessConfiguration')&`$expand=groupAssignments"
-        }
-        elseif ($iOS) {
-            $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.iosUpdateConfiguration')&`$expand=groupAssignments"
-        }
-        elseif ($macOS) {
-            $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.macOSSoftwareUpdateConfiguration')&`$expand=groupAssignments"
-        }
-
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-Device/Get-DeviceUpdatePolicy.ps1' 59
-#Region './Public/New-Device/New-DeviceCompliancePolicy.ps1' 0
-Function New-DeviceCompliancePolicy() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceCompliancePolicies'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceCompliancePolicy.ps1' 39
-#Region './Public/New-Device/New-DeviceConfigProfile.ps1' 0
-Function New-DeviceConfigProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceConfigurations'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceConfigProfile.ps1' 39
-#Region './Public/New-Device/New-DeviceEndpointSecProfile.ps1' 0
-Function New-DeviceEndpointSecProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $TemplateId,
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/templates/$TemplateId/createInstance"
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceEndpointSecProfile.ps1' 41
-#Region './Public/New-Device/New-DeviceFilter.ps1' 0
-Function New-DeviceFilter() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'beta'
-    $Resource = 'deviceManagement/assignmentFilters'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceFilter.ps1' 39
-#Region './Public/New-Device/New-DeviceNotificationMessage.ps1' 0
-Function New-DeviceNotificationMessageNew-DeviceNotificationMessage() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $Id,
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/notificationMessageTemplates/$Id/localizedNotificationMessages"
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceNotificationMessage.ps1' 41
-#Region './Public/New-Device/New-DeviceNotificationTemplate.ps1' 0
-Function New-DeviceNotificationTemplate() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'v1.0'
-    $Resource = 'deviceManagement/notificationMessageTemplates'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceNotificationTemplate.ps1' 39
-#Region './Public/New-Device/New-DeviceScript.ps1' 0
-Function New-DeviceManagementScript() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    Param (
-        # Path or URL to Powershell-script to add to Intune
-        [Parameter(Mandatory = $true)]
-        [string]$File,
-        # PowerShell description in Intune
-        [Parameter(Mandatory = $false)]
-        [string]$Description
-    )
-
-    if (!(Test-Path $File)) {
-        Write-Output "$File could not be located."
-        break
-    }
-    $FileName = Get-Item $File | Select-Object -ExpandProperty Name
-    $DisplayName = $FileName.Split('.')[0]
-    $B64File = [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("$File"));
-
-    $JSON = @"
-{
-    "@odata.type": "#microsoft.graph.deviceManagementScript",
-    "displayName": "$DisplayName",
-    "description": "$Description",
-    "runSchedule": {
-    "@odata.type": "microsoft.graph.runSchedule"
-},
-    "scriptContent": "$B64File",
-    "runAsAccount": "system",
-    "enforceSignatureCheck": "false",
-    "fileName": "$FileName"
-}
-"@
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceManagementScripts'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceScript.ps1' 65
-#Region './Public/New-Device/New-DeviceSettingCatalog.ps1' 0
-Function New-DeviceSettingCatalog() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/configurationPolicies'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Device/New-DeviceSettingCatalog.ps1' 39
-#Region './Public/Start-App/Start-AppAppleVPPAppSync.ps1' 0
-Function Start-AppAppleVPPAppSync() {
-
-    <#
-    .SYNOPSIS
-    Sync Intune tenant to Apple DEP service
-    .DESCRIPTION
-    Intune automatically syncs with the Apple DEP service once every 24hrs. This function synchronises your Intune tenant with the Apple DEP service.
-    .EXAMPLE
-    Sync-AppleDEP
-    .NOTES
-    NAME: Sync-AppleDEP
-    #>
-
-    [cmdletbinding()]
-
-    Param(
-        [parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'beta'
-    $Resource = "deviceManagement/depOnboardingSettings/$id/syncWithAppleDeviceEnrollmentProgram"
-
-    try {
-
-        $Uri = "https://graph.microsoft.com/$graphApiVersion/$($resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post
-
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Start-App/Start-AppAppleVPPAppSync.ps1' 37
-#Region './Public/Start-App/Start-AppGooglePlayAppSync.ps1' 0
-Function Start-AppGooglePlayAppSync() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = '/deviceManagement/androidManagedStoreAccountEnterpriseSettings/syncApps'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post
-
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Start-App/Start-AppGooglePlayAppSync.ps1' 32
-#Region './Public/Get-App/Get-AppCategory.ps1' 0
-Function Get-AppCategory() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/mobileAppCategories'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-App/Get-AppCategory.ps1' 31
-#Region './Public/Get-App/Get-AppConfigPolicyApp.ps1' 0
-Function Get-AppConfigPolicyApp() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/targetedManagedAppConfigurations?`$expand=apps"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-App/Get-AppConfigPolicyApp.ps1' 31
-#Region './Public/Get-App/Get-AppConfigPolicyDevice.ps1' 0
-Function Get-AppConfigPolicyDevice() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/mobileAppConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-App/Get-AppConfigPolicyDevice.ps1' 31
-#Region './Public/Get-App/Get-AppMobileApp.ps1' 0
-Function Get-AppMobileApp() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/mobileApps'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-App/Get-AppMobileApp.ps1' 31
-#Region './Public/Get-App/Get-AppMobileAppAssignment.ps1' 0
-Function Get-AppMobileAppAssignment() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/?`$expand=categories,assignments"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-App/Get-AppMobileAppAssignment.ps1' 37
-#Region './Public/Get-App/Get-AppMobileAppCategory.ps1' 0
-Function Get-AppMobileAppCategory() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $Id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = "deviceAppManagement/mobileApps/$Id/categories"
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-App/Get-AppMobileAppCategory.ps1' 36
-#Region './Public/Get-App/Get-AppProtectionPolicy.ps1' 0
-Function Get-AppProtectionPolicy() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceAppManagement/managedAppPolicies'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get | Where-Object { ($_.'@odata.type').contains('ManagedAppProtection') -or ($_.'@odata.type').contains('InformationProtectionPolicy') }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Get-App/Get-AppProtectionPolicy.ps1' 31
-#Region './Public/Add-App/Add-AppCategory.ps1' 0
+#EndRegion '.\Private\Write-MEMLog.ps1' 49
+#Region '.\Public\Add-App\Add-AppCategory.ps1' 0
 Function Add-AppCategory() {
 
     <#
@@ -2858,7 +439,7 @@ Function Add-AppCategory() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Name
+        [string]$Name
     )
 
     $graphApiVersion = 'Beta'
@@ -2880,8 +461,8 @@ Function Add-AppCategory() {
         break
     }
 }
-#EndRegion './Public/Add-App/Add-AppCategory.ps1' 42
-#Region './Public/Add-App/Add-AppConfigPolicyDeviceAssignment.ps1' 0
+#EndRegion '.\Public\Add-App\Add-AppCategory.ps1' 41
+#Region '.\Public\Add-App\Add-AppConfigPolicyDeviceAssignment.ps1' 0
 Function Add-AppConfigPolicyDeviceAssignment() {
 
     <#
@@ -2901,16 +482,21 @@ Function Add-AppConfigPolicyDeviceAssignment() {
     param
     (
         [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
         [ValidateSet('Include', 'Exclude')]
-        $FilterMode,
+        [string]$FilterMode,
+
         [ValidateSet('Users', 'Devices')]
-        $All
+        [string]$All
     )
 
     $graphApiVersion = 'beta'
@@ -2963,8 +549,8 @@ Function Add-AppConfigPolicyDeviceAssignment() {
         break
     }
 }
-#EndRegion './Public/Add-App/Add-AppConfigPolicyDeviceAssignment.ps1' 82
-#Region './Public/Add-App/Add-AppMobileAppAssignment.ps1' 0
+#EndRegion '.\Public\Add-App\Add-AppConfigPolicyDeviceAssignment.ps1' 86
+#Region '.\Public\Add-App\Add-AppMobileAppAssignment.ps1' 0
 Function Add-AppMobileAppAssignment() {
 
     <#
@@ -2984,24 +570,27 @@ Function Add-AppMobileAppAssignment() {
     (
         [parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        $Id,
+        [string]$Id,
+
         [parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
-        $TargetGroupId,
+        [string]$TargetGroupId,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Available', 'Required')]
-        [ValidateNotNullOrEmpty()]
-        $InstallIntent,
-        $FilterID,
+        [string]$InstallIntent,
+
+        [string]$FilterID,
+
         [ValidateSet('Include', 'Exclude')]
-        $FilterMode,
+        [string]$FilterMode,
+
         [parameter(Mandatory = $false)]
         [ValidateSet('Users', 'Devices')]
-        [ValidateNotNullOrEmpty()]
-        $All,
+        [string]$All,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Replace', 'Add')]
-        $Action
+        [string]$Action
     )
 
     $graphApiVersion = 'beta'
@@ -3096,8 +685,8 @@ Function Add-AppMobileAppAssignment() {
         break
     }
 }
-#EndRegion './Public/Add-App/Add-AppMobileAppAssignment.ps1' 132
-#Region './Public/Add-App/Add-AppMobileAppCategory.ps1' 0
+#EndRegion '.\Public\Add-App\Add-AppMobileAppAssignment.ps1' 134
+#Region '.\Public\Add-App\Add-AppMobileAppCategory.ps1' 0
 Function Add-AppMobileAppCategory() {
 
     <#
@@ -3117,9 +706,10 @@ Function Add-AppMobileAppCategory() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
-        $CategoryId
+        [string]$CategoryId
     )
 
     $graphApiVersion = 'Beta'
@@ -3141,8 +731,8 @@ Function Add-AppMobileAppCategory() {
         break
     }
 }
-#EndRegion './Public/Add-App/Add-AppMobileAppCategory.ps1' 44
-#Region './Public/Add-App/Add-AppProtectionPolicyAssignment.ps1' 0
+#EndRegion '.\Public\Add-App\Add-AppMobileAppCategory.ps1' 44
+#Region '.\Public\Add-App\Add-AppProtectionPolicyAssignment.ps1' 0
 Function Add-AppProtectionPolicyAssignment() {
 
     <#
@@ -3162,13 +752,15 @@ Function Add-AppProtectionPolicyAssignment() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
         [Parameter(Mandatory = $true)]
         [ValidateSet('Android', 'iOS')]
         [string]$OS,
+
         [ValidateSet('Include', 'Exclude')]
-        [ValidateNotNullOrEmpty()]
         [string]$AssignmentType
     )
 
@@ -3219,8 +811,1685 @@ Function Add-AppProtectionPolicyAssignment() {
         break
     }
 }
-#EndRegion './Public/Add-App/Add-AppProtectionPolicyAssignment.ps1' 77
-#Region './Public/Get-Group/Get-MEMGroup.ps1' 0
+#EndRegion '.\Public\Add-App\Add-AppProtectionPolicyAssignment.ps1' 78
+#Region '.\Public\Add-Device\Add-DeviceCompliancePolicyAssignment.ps1' 0
+Function Add-DeviceCompliancePolicyAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Include', 'Exclude')]
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [string]$FilterMode,
+
+        [ValidateSet('Users', 'Devices')]
+        [string]$All
+    )
+
+    $graphApiVersion = 'v1.0'
+    $Resource = "deviceManagement/deviceCompliancePolicies/$Id/assign"
+
+    try {
+        $TargetGroup = New-Object -TypeName psobject
+
+        if ($TargetGroupId) {
+            if ($AssignmentType -eq 'Exclude') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
+            }
+            elseif ($AssignmentType -eq 'Include') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
+            }
+
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
+
+        }
+        else {
+            if ($All -eq 'Users') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
+            }
+            ElseIf ($All -eq 'Devices') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
+            }
+        }
+
+        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
+        }
+
+        $Target = New-Object -TypeName psobject
+        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
+
+        $TargetGroups = $Target
+
+        # Creating JSON object to pass to Graph
+        $Output = New-Object -TypeName psobject
+        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
+        $JSON = $Output | ConvertTo-Json -Depth 3
+
+        # POST to Graph Service
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Device\Add-DeviceCompliancePolicyAssignment.ps1' 87
+#Region '.\Public\Add-Device\Add-DeviceConfigProfileAssignment.ps1' 0
+Function Add-DeviceConfigProfileAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Include', 'Exclude')]
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [ValidateSet('Include', 'Exclude')]
+        [string]$FilterMode,
+
+        [ValidateSet('Users', 'Devices')]
+        [string]$All
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/deviceConfigurations/$Id/assign"
+
+    try {
+        $TargetGroup = New-Object -TypeName psobject
+
+        if ($TargetGroupId) {
+            if ($AssignmentType -eq 'Exclude') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
+            }
+            elseif ($AssignmentType -eq 'Include') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
+            }
+
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
+        }
+
+        else {
+            if ($All -eq 'Users') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
+            }
+            ElseIf ($All -eq 'Devices') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
+            }
+        }
+
+        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
+        }
+
+        $Target = New-Object -TypeName psobject
+        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
+
+        $TargetGroups += $Target
+
+        $Output = New-Object -TypeName psobject
+        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
+        $JSON = $Output | ConvertTo-Json -Depth 3
+
+        # POST to Graph Service
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Device\Add-DeviceConfigProfileAssignment.ps1' 87
+#Region '.\Public\Add-Device\Add-DeviceEndpointSecProfileAssignment.ps1' 0
+Function Add-DeviceEndpointSecurityAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Include', 'Exclude')]
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [ValidateSet('Include', 'Exclude')]
+        [string]$FilterMode,
+
+        [ValidateSet('Users', 'Devices')]
+        [string]$All
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/intents/$Id/assign"
+
+    try {
+        $TargetGroup = New-Object -TypeName psobject
+
+        if ($TargetGroupId) {
+            if ($AssignmentType -eq 'Exclude') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
+            }
+            elseif ($AssignmentType -eq 'Include') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
+            }
+
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value "$TargetGroupId"
+        }
+        else {
+            if ($All -eq 'Users') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
+            }
+            ElseIf ($All -eq 'Devices') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
+            }
+        }
+
+        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
+        }
+
+        $Target = New-Object -TypeName psobject
+        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
+
+        $TargetGroups = $Target
+
+        $Output = New-Object -TypeName psobject
+        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
+        $JSON = $Output | ConvertTo-Json -Depth 3
+
+        # POST to Graph Service
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Device\Add-DeviceEndpointSecProfileAssignment.ps1' 86
+#Region '.\Public\Add-Device\Add-DeviceSettingsCatalogAssignment.ps1' 0
+Function Add-DeviceSettingsCatalogAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Include', 'Exclude')]
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [ValidateSet('Include', 'Exclude')]
+        [string]$FilterMode,
+
+        [ValidateSet('Users', 'Devices')]
+        [string]$All
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/configurationPolicies/$Id/assign"
+
+    try {
+        $TargetGroup = New-Object -TypeName psobject
+
+        if ($TargetGroupId) {
+            if ($AssignmentType -eq 'Exclude') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
+            }
+            elseif ($AssignmentType -eq 'Include') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
+            }
+
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
+        }
+        else {
+            if ($All -eq 'Users') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
+            }
+            ElseIf ($All -eq 'Devices') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
+            }
+        }
+
+        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
+        }
+
+        $Target = New-Object -TypeName psobject
+        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
+
+        $TargetGroups = $Target
+
+        $Output = New-Object -TypeName psobject
+        $Output | Add-Member -MemberType NoteProperty -Name 'assignments' -Value @($TargetGroups)
+        $JSON = $Output | ConvertTo-Json -Depth 3
+
+        # POST to Graph Service
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Device\Add-DeviceSettingsCatalogAssignment.ps1' 86
+#Region '.\Public\Add-Enrolment\Add-EnrolmentADEProfileAssignment.ps1' 0
+Function Add-EnrolmentADEProfileAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ProfileID,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DeviceSerials
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/depOnboardingSettings/$Id/enrollmentProfiles('$ProfileID')/updateDeviceProfileAssignment"
+
+    $Output = New-Object -TypeName psobject
+    $Output | Add-Member -MemberType NoteProperty -Name 'deviceIds' -Value $DeviceSerials
+    $JSON = $Output | ConvertTo-Json -Depth 3
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Enrolment\Add-EnrolmentADEProfileAssignment.ps1' 45
+#Region '.\Public\Add-Enrolment\Add-EnrolmentAutopilotProfileAssignment.ps1' 0
+Function Add-EnrolmentAutopilotProfileAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [parameter(Mandatory = $true)]
+        [string]$TargetGroupId,
+
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Include', 'Exclude')]
+        [string]$AssignmentType
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/windowsAutopilotDeploymentProfiles/$Id/assignments"
+
+    try {
+        $TargetGroup = New-Object -TypeName psobject
+
+        if ($AssignmentType -eq 'Exclude') {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
+        }
+        elseif ($AssignmentType -eq 'Include') {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
+        }
+
+        $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
+
+        $Target = New-Object -TypeName psobject
+        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
+
+        $JSON = $Target | ConvertTo-Json -Depth 3
+
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Enrolment\Add-EnrolmentAutopilotProfileAssignment.ps1' 59
+#Region '.\Public\Add-Enrolment\Add-EnrolmentESPAssignment.ps1' 0
+Function Add-EnrolmentESPAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Include', 'Exclude')]
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [ValidateSet('Include', 'Exclude')]
+        [string]$FilterMode,
+
+        [ValidateSet('Users', 'Devices')]
+        [string]$All
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/deviceEnrollmentConfigurations/$Id/assign"
+
+    try {
+        $TargetGroup = New-Object -TypeName psobject
+
+        if ($TargetGroupId) {
+            if ($AssignmentType -eq 'Exclude') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
+            }
+            elseif ($AssignmentType -eq 'Include') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
+            }
+
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
+        }
+
+        else {
+            if ($All -eq 'Users') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
+            }
+            ElseIf ($All -eq 'Devices') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
+            }
+        }
+
+        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
+        }
+
+        $Target = New-Object -TypeName psobject
+        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
+
+        $Output = New-Object -TypeName psobject
+        $Output | Add-Member -MemberType NoteProperty -Name 'enrollmentConfigurationAssignments' -Value @($Target)
+        $JSON = $Output | ConvertTo-Json -Depth 3
+
+        # POST to Graph Service
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Enrolment\Add-EnrolmentESPAssignment.ps1' 85
+#Region '.\Public\Add-Enrolment\Add-EnrolmentRestrictionAssignment.ps1' 0
+Function Add-EnrolmentRestrictionAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Include', 'Exclude')]
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [ValidateSet('Include', 'Exclude')]
+        [string]$FilterMode,
+
+        [ValidateSet('Users', 'Devices')]
+        [string]$All
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/deviceEnrollmentConfigurations/$Id/assign"
+
+    try {
+        $TargetGroup = New-Object -TypeName psobject
+
+        if ($TargetGroupId) {
+            if ($AssignmentType -eq 'Exclude') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.exclusionGroupAssignmentTarget'
+            }
+            elseif ($AssignmentType -eq 'Include') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.groupAssignmentTarget'
+            }
+
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'groupId' -Value $TargetGroupId
+        }
+        else {
+            if ($All -eq 'Users') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allLicensedUsersAssignmentTarget'
+            }
+            ElseIf ($All -eq 'Devices') {
+                $TargetGroup | Add-Member -MemberType NoteProperty -Name '@odata.type' -Value '#microsoft.graph.allDevicesAssignmentTarget'
+            }
+        }
+
+        if (($FilterMode -eq 'Include') -or ($FilterMode -eq 'Exclude')) {
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterId' -Value $FilterID
+            $TargetGroup | Add-Member -MemberType NoteProperty -Name 'deviceAndAppManagementAssignmentFilterType' -Value $FilterMode
+        }
+
+        $Target = New-Object -TypeName psobject
+        $Target | Add-Member -MemberType NoteProperty -Name 'target' -Value $TargetGroup
+
+        # Creating JSON object to pass to Graph
+        $Output = New-Object -TypeName psobject
+        $Output | Add-Member -MemberType NoteProperty -Name 'enrollmentConfigurationAssignments' -Value @($Target)
+        $JSON = $Output | ConvertTo-Json -Depth 3
+
+        # POST to Graph Service
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Add-Enrolment\Add-EnrolmentRestrictionAssignment.ps1' 85
+#Region '.\Public\Get-App\Get-AppCategory.ps1' 0
+Function Get-AppCategory() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/mobileAppCategories'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-App\Get-AppCategory.ps1' 30
+#Region '.\Public\Get-App\Get-AppConfigPolicyApp.ps1' 0
+Function Get-AppConfigPolicyApp() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceAppManagement/targetedManagedAppConfigurations?`$expand=apps"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-App\Get-AppConfigPolicyApp.ps1' 30
+#Region '.\Public\Get-App\Get-AppConfigPolicyDevice.ps1' 0
+Function Get-AppConfigPolicyDevice() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/mobileAppConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-App\Get-AppConfigPolicyDevice.ps1' 30
+#Region '.\Public\Get-App\Get-AppMobileApp.ps1' 0
+Function Get-AppMobileApp() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/mobileApps'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-App\Get-AppMobileApp.ps1' 30
+#Region '.\Public\Get-App\Get-AppMobileAppAssignment.ps1' 0
+Function Get-AppMobileAppAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceAppManagement/mobileApps/$Id/?`$expand=categories,assignments"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-App\Get-AppMobileAppAssignment.ps1' 36
+#Region '.\Public\Get-App\Get-AppMobileAppCategory.ps1' 0
+Function Get-AppMobileAppCategory() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceAppManagement/mobileApps/$Id/categories"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-App\Get-AppMobileAppCategory.ps1' 35
+#Region '.\Public\Get-App\Get-AppProtectionPolicy.ps1' 0
+Function Get-AppProtectionPolicy() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/managedAppPolicies'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get | Where-Object { ($_.'@odata.type').contains('ManagedAppProtection') -or ($_.'@odata.type').contains('InformationProtectionPolicy') }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-App\Get-AppProtectionPolicy.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceAutopilot.ps1' 0
+Function Get-DeviceAutopilot() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get autopilot devices via the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets any autopilot devices
+    .EXAMPLE
+    Get-AutopilotDevices
+    Returns any autopilot devices
+    .NOTES
+    NAME: Get-AutopilotDevices
+    #>
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/windowsAutopilotDeviceIdentities'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceAutopilot.ps1' 29
+#Region '.\Public\Get-Device\Get-DeviceCompliancePolicy.ps1' 0
+Function Get-DeviceCompliancePolicy() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceCompliancePolicies'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceCompliancePolicy.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceCompliancePolicyScript.ps1' 0
+Function Get-DeviceCompliancePolicyScript() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceComplianceScripts'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceCompliancePolicyScript.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceConfigProfile.ps1' 0
+Function Get-DeviceConfigProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'beta'
+    $Resource = 'deviceManagement/deviceConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceConfigProfile.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceConfigProfileAssignment.ps1' 0
+Function Get-DeviceConfigProfileAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceConfigProfileAssignment.ps1' 36
+#Region '.\Public\Get-Device\Get-DeviceEndpointSecProfile.ps1' 0
+Function Get-DeviceEndpointSecProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/intents'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceEndpointSecProfile.ps1' 31
+#Region '.\Public\Get-Device\Get-DeviceEndpointSecTemplate.ps1' 0
+Function Get-DeviceEndpointSecTemplate() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/templates?`$filter=(isof(%27microsoft.graph.securityBaselineTemplate%27))"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceEndpointSecTemplate.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceEnrolmentRestriction.ps1' 0
+Function Get-DeviceEnrollRestriction() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceEnrolmentRestriction.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceFilter.ps1' 0
+Function Get-DeviceFilter() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'beta'
+    $Resource = 'deviceManagement/assignmentFilters'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceFilter.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceManagedDevice.ps1' 0
+Function Get-DeviceManagedDevice() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+    param
+    (
+        [switch]$IncludeEAS,
+        [switch]$ExcludeMDM
+    )
+
+    $graphApiVersion = 'beta'
+    $Resource = 'deviceManagement/managedDevices'
+
+    try {
+        $Count_Params = 0
+
+        if ($IncludeEAS.IsPresent) { $Count_Params++ }
+        if ($ExcludeMDM.IsPresent) { $Count_Params++ }
+        if ($Count_Params -gt 1) {
+            Write-Warning 'Multiple parameters set, specify a single parameter -IncludeEAS, -ExcludeMDM or no parameter against the function'
+            break
+        }
+        elseif ($IncludeEAS) {
+            $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource"
+        }
+        elseif ($ExcludeMDM) {
+            $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource`?`$filter=managementAgent eq 'eas'"
+        }
+        else {
+            $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource`?`$filter=managementAgent eq 'mdm' and managementAgent eq 'easmdm'"
+        }
+
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceManagedDevice.ps1' 52
+#Region '.\Public\Get-Device\Get-DeviceNotificationMessage.ps1' 0
+Function Get-DeviceNotificationMessage() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+    param(
+        [parameter(Mandatory = $true)]
+        $Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/notificationMessageTemplates/$Id/localizedNotificationMessages"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceNotificationMessage.ps1' 34
+#Region '.\Public\Get-Device\Get-DeviceNotificationTemplate.ps1' 0
+Function Get-DeviceNotificationTemplate() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/notificationMessageTemplates'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceNotificationTemplate.ps1' 30
+#Region '.\Public\Get-Device\Get-DeviceScript.ps1' 0
+Function Get-DeviceScript() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    param (
+
+        [Parameter(Mandatory = $true)]
+        $Id
+
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceManagementScripts'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource/$Id"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceScript.ps1' 37
+#Region '.\Public\Get-Device\Get-DeviceScriptAssignment.ps1' 0
+Function Get-DeviceScriptAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceManagementScripts'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceScriptAssignment.ps1' 36
+#Region '.\Public\Get-Device\Get-DeviceSettingsCatalog.ps1' 0
+Function Get-DeviceSettingsCatalog() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [parameter(Mandatory = $false)]
+        [ValidateSet('windows10', 'macOS')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Platform
+    )
+
+    $graphApiVersion = 'beta'
+    if ($Platform) {
+        $Resource = "deviceManagement/configurationPolicies?`$filter=platforms has '$Platform' and technologies has 'mdm'"
+    }
+    else {
+        $Resource = "deviceManagement/configurationPolicies?`$filter=technologies has 'mdm'"
+    }
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceSettingsCatalog.ps1' 43
+#Region '.\Public\Get-Device\Get-DeviceUpdatePolicy.ps1' 0
+Function Get-DeviceUpdatePolicy() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [switch]$Windows10,
+        [switch]$iOS,
+        [switch]$macOS
+    )
+
+    $graphApiVersion = 'Beta'
+
+    try {
+        $Count_Params = 0
+        if ($iOS.IsPresent) { $Count_Params++ }
+        if ($Windows10.IsPresent) { $Count_Params++ }
+        if ($macOS.IsPresent) { $Count_Params++ }
+        if ($Count_Params -gt 1) {
+            Write-Error 'Multiple parameters set, specify a single parameter -iOS or -Windows10 or -macOS against the function'
+            break
+        }
+        elseif ($Count_Params -eq 0) {
+            Write-Error 'Parameter -iOS or -Windows10 or -macOS required against the function...'
+            break
+        }
+        elseif ($Windows10) {
+            $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.windowsUpdateForBusinessConfiguration')&`$expand=groupAssignments"
+        }
+        elseif ($iOS) {
+            $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.iosUpdateConfiguration')&`$expand=groupAssignments"
+        }
+        elseif ($macOS) {
+            $Resource = "deviceManagement/deviceConfigurations?`$filter=isof('microsoft.graph.macOSSoftwareUpdateConfiguration')&`$expand=groupAssignments"
+        }
+
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Device\Get-DeviceUpdatePolicy.ps1' 58
+#Region '.\Public\Get-Enrolment\Get-EnrolmentADEProfile.ps1' 0
+Function Get-EnrolmentADEProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/depOnboardingSettings/$Id/enrollmentProfiles"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Enrolment\Get-EnrolmentADEProfile.ps1' 35
+#Region '.\Public\Get-Enrolment\Get-EnrolmentADEToken.ps1' 0
+Function Get-EnrolmentADEToken() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/depOnboardingSettings'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Enrolment\Get-EnrolmentADEToken.ps1' 29
+#Region '.\Public\Get-Enrolment\Get-EnrolmentAPProfile.ps1' 0
+Function Get-EnrolmentAPProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Enrolment\Get-EnrolmentAPProfile.ps1' 30
+#Region '.\Public\Get-Enrolment\Get-EnrolmentAPProfileAssignment.ps1' 0
+Function Get-EnrolmentAPProfileAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Enrolment\Get-EnrolmentAPProfileAssignment.ps1' 36
+#Region '.\Public\Get-Enrolment\Get-EnrolmentESP.ps1' 0
+Function Get-EnrolmentESP() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Enrolment\Get-EnrolmentESP.ps1' 30
+#Region '.\Public\Get-Enrolment\Get-EnrolmentESPAssignment.ps1' 0
+Function Get-EnrolmentESPAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id/Assignments/"
+        Invoke-MEMRestMethod -Uri $uri -Method Get
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Get-Enrolment\Get-EnrolmentESPAssignment.ps1' 36
+#Region '.\Public\Get-Group\Get-MEMGroup.ps1' 0
 Function Get-MEMGroup() {
 
     <#
@@ -3259,8 +2528,8 @@ Function Get-MEMGroup() {
         break
     }
 }
-#EndRegion './Public/Get-Group/Get-MEMGroup.ps1' 39
-#Region './Public/Get-Group/Get-MEMGroupMember.ps1' 0
+#EndRegion '.\Public\Get-Group\Get-MEMGroup.ps1' 38
+#Region '.\Public\Get-Group\Get-MEMGroupMember.ps1' 0
 Function Get-MEMGroupMember() {
 
     <#
@@ -3299,8 +2568,1069 @@ Function Get-MEMGroupMember() {
         break
     }
 }
-#EndRegion './Public/Get-Group/Get-MEMGroupMember.ps1' 39
-#Region './Public/Update-Device/Update-DeviceAPDevice.ps1' 0
+#EndRegion '.\Public\Get-Group\Get-MEMGroupMember.ps1' 38
+#Region '.\Public\New-App\New-AppConfigPolicyApp.ps1' 0
+Function New-AppConfigPolicyApp() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/targetedManagedAppConfigurations'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-App\New-AppConfigPolicyApp.ps1' 38
+#Region '.\Public\New-App\New-AppConfigPolicyDevice.ps1' 0
+Function New-AppConfigPolicyDevice() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/mobileAppConfigurations'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-App\New-AppConfigPolicyDevice.ps1' 38
+#Region '.\Public\New-App\New-AppManagedGooglePlayApp.ps1' 0
+Function New-AppManagedGooglePlayApp() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/androidManagedStoreAccountEnterpriseSettings/approveApps'
+
+    try {
+        $Id = 'app:' + $Id
+        $Packages = New-Object -TypeName psobject
+        $Packages | Add-Member -MemberType NoteProperty -Name 'approveAllPermissions' -Value 'true'
+        $Packages | Add-Member -MemberType NoteProperty -Name 'packageIds' -Value @($Id)
+        $JSON = $Packages | ConvertTo-Json -Depth 3
+
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-App\New-AppManagedGooglePlayApp.ps1' 43
+#Region '.\Public\New-App\New-AppProtectionPolicy.ps1' 0
+Function New-AppProtectionPolicy() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/managedAppPolicies'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-App\New-AppProtectionPolicy.ps1' 38
+#Region '.\Public\New-Device\New-DeviceCompliancePolicy.ps1' 0
+Function New-DeviceCompliancePolicy() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceCompliancePolicies'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceCompliancePolicy.ps1' 38
+#Region '.\Public\New-Device\New-DeviceConfigProfile.ps1' 0
+Function New-DeviceConfigProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceConfigurations'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceConfigProfile.ps1' 38
+#Region '.\Public\New-Device\New-DeviceEndpointSecProfile.ps1' 0
+Function New-DeviceEndpointSecProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/templates/$Id/createInstance"
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceEndpointSecProfile.ps1' 40
+#Region '.\Public\New-Device\New-DeviceFilter.ps1' 0
+Function New-DeviceFilter() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'beta'
+    $Resource = 'deviceManagement/assignmentFilters'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceFilter.ps1' 38
+#Region '.\Public\New-Device\New-DeviceNotificationMessage.ps1' 0
+Function New-DeviceNotificationMessageNew-DeviceNotificationMessage() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceManagement/notificationMessageTemplates/$Id/localizedNotificationMessages"
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceNotificationMessage.ps1' 40
+#Region '.\Public\New-Device\New-DeviceNotificationTemplate.ps1' 0
+Function New-DeviceNotificationTemplate() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'v1.0'
+    $Resource = 'deviceManagement/notificationMessageTemplates'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceNotificationTemplate.ps1' 38
+#Region '.\Public\New-Device\New-DeviceScript.ps1' 0
+Function New-DeviceManagementScript() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    Param (
+        # Path or URL to Powershell-script to add to Intune
+        [Parameter(Mandatory = $true)]
+        [string]$File,
+
+        # PowerShell description in Intune
+        [Parameter(Mandatory = $false)]
+        [string]$Description
+    )
+
+    if (!(Test-Path $File)) {
+        Write-Output "$File could not be located."
+        break
+    }
+    $FileName = Get-Item $File | Select-Object -ExpandProperty Name
+    $DisplayName = $FileName.Split('.')[0]
+    $B64File = [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("$File"));
+
+    $JSON = @"
+{
+    "@odata.type": "#microsoft.graph.deviceManagementScript",
+    "displayName": "$DisplayName",
+    "description": "$Description",
+    "runSchedule": {
+    "@odata.type": "microsoft.graph.runSchedule"
+},
+    "scriptContent": "$B64File",
+    "runAsAccount": "system",
+    "enforceSignatureCheck": "false",
+    "fileName": "$FileName"
+}
+"@
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceManagementScripts'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceScript.ps1' 65
+#Region '.\Public\New-Device\New-DeviceSettingCatalog.ps1' 0
+Function New-DeviceSettingCatalog() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/configurationPolicies'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Device\New-DeviceSettingCatalog.ps1' 38
+#Region '.\Public\New-Enrolment\New-EnrolmentAPProfile.ps1' 0
+Function New-EnrolmentAPProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Enrolment\New-EnrolmentAPProfile.ps1' 38
+#Region '.\Public\New-Enrolment\New-EnrolmentESP.ps1' 0
+Function New-EnrolmentESP() {
+
+    <#
+    .SYNOPSIS
+    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and gets Device Enrollment Configurations
+    .EXAMPLE
+    Get-DeviceEnrollmentConfigurations
+    Returns Device Enrollment Configurations configured in Intune
+    .NOTES
+    NAME: Get-DeviceEnrollmentConfigurations
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
+
+    try {
+        Test-MEMJSON -Json $JSON
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\New-Enrolment\New-EnrolmentESP.ps1' 38
+#Region '.\Public\Remove-App\Remove-AppConfigPolicyApp.ps1' 0
+Function Remove-AppConfigPolicyApp() {
+
+    <#
+    .SYNOPSIS
+    This function is used to remove Managed App policies from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and removes managed app policies
+    .EXAMPLE
+    Remove-AppConfigPolicyApp -id $id
+    Removes a managed app policy configured in Intune
+    .NOTES
+    NAME: Remove-AppConfigPolicyApp
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/targetedManagedAppConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-App\Remove-AppConfigPolicyApp.ps1' 37
+#Region '.\Public\Remove-App\Remove-AppConfigPolicyDevice.ps1' 0
+Function Remove-AppConfigPolicyDevice() {
+
+    <#
+    .SYNOPSIS
+    This function is used to remove Managed App policies from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and removes managed app policies
+    .EXAMPLE
+    Remove-AppConfigPolicyDevice -id $id
+    Removes a managed app policy configured in Intune
+    .NOTES
+    NAME: Remove-AppConfigPolicyDevice
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$Id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/mobileAppConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-App\Remove-AppConfigPolicyDevice.ps1' 37
+#Region '.\Public\Remove-App\Remove-AppMobileAppAssignment.ps1' 0
+Function Remove-AppMobileAppAssignment() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [string]$Id,
+        [parameter(Mandatory = $true)]
+        [string]$AssignmentId
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceAppManagement/mobileApps/$Id/assignments/$AssignmentId"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-App\Remove-AppMobileAppAssignment.ps1' 39
+#Region '.\Public\Remove-App\Remove-AppMobileAppCategory.ps1' 0
+Function Remove-AppMobileAppCategory() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$Id,
+        [Parameter(Mandatory = $true)]
+        [string]$CategoryId
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = "deviceAppManagement/mobileApps/$Id/categories/$CategoryId/`$ref"
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-App\Remove-AppMobileAppCategory.ps1' 39
+#Region '.\Public\Remove-App\Remove-AppProtectionPolicy.ps1' 0
+Function Remove-AppProtectionPolicy() {
+
+    <#
+    .SYNOPSIS
+    This function is used to remove Managed App policies from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and removes managed app policies
+    .EXAMPLE
+    Remove-ManagedAppPolicy -id $id
+    Removes a managed app policy configured in Intune
+    .NOTES
+    NAME: Remove-ManagedAppPolicy
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceAppManagement/managedAppPolicies'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-App\Remove-AppProtectionPolicy.ps1' 37
+#Region '.\Public\Remove-Device\Remove-DeviceCompliancePolicy.ps1' 0
+Function Remove-DeviceCompliancePolicy() {
+
+    <#
+        .SYNOPSIS
+        This function is used to delete a device configuration policy from the Graph API REST interface
+        .DESCRIPTION
+        The function connects to the Graph API Interface and deletes a device compliance policy
+        .EXAMPLE
+        Remove-DeviceCompliancePolicy -id $id
+        Returns any device configuration policies configured in Intune
+        .NOTES
+        NAME: Remove-DeviceCompliancePolicy
+        #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceCompliancePolicies'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-Device\Remove-DeviceCompliancePolicy.ps1' 37
+#Region '.\Public\Remove-Device\Remove-DeviceConfigProfile.ps1' 0
+Function Remove-DeviceConfigProfile() {
+
+    <#
+    .SYNOPSIS
+    This function is used to remove a device configuration policies from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and removes a device configuration policies
+    .EXAMPLE
+    Remove-DeviceConfigProfile -id $id
+    Removes a device configuration policies configured in Intune
+    .NOTES
+    NAME: Remove-DeviceConfigProfile
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceConfigurations'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-Device\Remove-DeviceConfigProfile.ps1' 37
+#Region '.\Public\Remove-Device\Remove-DeviceFilter.ps1' 0
+Function Remove-DeviceFilter() {
+
+    <#
+    .SYNOPSIS
+    This function is used to remove a device configuration policies from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and removes a device configuration policies
+    .EXAMPLE
+    Remove-DeviceFilter -id $id
+    Removes a device configuration policies configured in Intune
+    .NOTES
+    NAME: Remove-DeviceFilter
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/assignmentFilters'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
+        if ($PSCmdlet.ShouldProcess("ShouldProcess?")) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-Device\Remove-DeviceFilter.ps1' 37
+#Region '.\Public\Remove-Device\Remove-DeviceScript.ps1' 0
+Function Remove-DeviceManagement() {
+
+    <#
+    .SYNOPSIS
+    This function is used to remove a device configuration policies from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and removes a device configuration policies
+    .EXAMPLE
+    Remove-DeviceManagementScript -id $id
+    Removes a device configuration policies configured in Intune
+    .NOTES
+    NAME: Remove-DeviceManagementScript
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/deviceManagementScripts'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
+        if ($PSCmdlet.ShouldProcess("ShouldProcess?")) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-Device\Remove-DeviceScript.ps1' 37
+#Region '.\Public\Remove-Device\Remove-DeviceSettingsCatalog.ps1' 0
+Function Remove-DeviceSettingsCatalog() {
+
+    <#
+    .SYNOPSIS
+    This function is used to remove a device configuration policies from the Graph API REST interface
+    .DESCRIPTION
+    The function connects to the Graph API Interface and removes a device configuration policies
+    .EXAMPLE
+    Remove-DeviceSettingsCatalogProfile -id $id
+    Removes a device configuration policies configured in Intune
+    .NOTES
+    NAME: Remove-DeviceSettingsCatalogProfile
+    #>
+
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$id
+    )
+
+    $graphApiVersion = 'Beta'
+    $Resource = 'deviceManagement/configurationPolicies'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Delete
+        }
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Remove-Device\Remove-DeviceSettingsCatalog.ps1' 37
+#Region '.\Public\Start-App\Start-AppAppleVPPAppSync.ps1' 0
+Function Start-AppAppleVPPAppSync() {
+
+    <#
+    .SYNOPSIS
+    Sync Intune tenant to Apple DEP service
+    .DESCRIPTION
+    Intune automatically syncs with the Apple DEP service once every 24hrs. This function synchronises your Intune tenant with the Apple DEP service.
+    .EXAMPLE
+    Sync-AppleDEP
+    .NOTES
+    NAME: Sync-AppleDEP
+    #>
+
+    [cmdletbinding()]
+
+    Param(
+        [parameter(Mandatory = $true)]
+        [string]$Id
+    )
+
+    $graphApiVersion = 'beta'
+    $Resource = "deviceManagement/depOnboardingSettings/$id/syncWithAppleDeviceEnrollmentProgram"
+
+    try {
+
+        $Uri = "https://graph.microsoft.com/$graphApiVersion/$($resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post
+
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Start-App\Start-AppAppleVPPAppSync.ps1' 36
+#Region '.\Public\Start-App\Start-AppGooglePlayAppSync.ps1' 0
+Function Start-AppGooglePlayAppSync() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = '/deviceManagement/androidManagedStoreAccountEnterpriseSettings/syncApps'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post
+
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Start-App\Start-AppGooglePlayAppSync.ps1' 31
+#Region '.\Public\Update-Device\Update-DeviceAPDevice.ps1' 0
 Function Update-DeviceAP() {
 
     <#
@@ -3318,9 +3648,10 @@ Function Update-DeviceAP() {
     [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
     param(
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
-        $GroupTag
+        [string]$GroupTag
     )
 
     $graphApiVersion = 'Beta'
@@ -3342,8 +3673,8 @@ Function Update-DeviceAP() {
         break
     }
 }
-#EndRegion './Public/Update-Device/Update-DeviceAPDevice.ps1' 42
-#Region './Public/Update-Device/Update-DeviceCompliancePolicy.ps1' 0
+#EndRegion '.\Public\Update-Device\Update-DeviceAPDevice.ps1' 42
+#Region '.\Public\Update-Device\Update-DeviceCompliancePolicy.ps1' 0
 Function Update-DeviceCompliancePolicy() {
 
     <#
@@ -3362,7 +3693,8 @@ Function Update-DeviceCompliancePolicy() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
         $JSON
     )
@@ -3385,8 +3717,8 @@ Function Update-DeviceCompliancePolicy() {
         break
     }
 }
-#EndRegion './Public/Update-Device/Update-DeviceCompliancePolicy.ps1' 42
-#Region './Public/Update-Device/Update-DeviceManagedDeviceName.ps1' 0
+#EndRegion '.\Public\Update-Device\Update-DeviceCompliancePolicy.ps1' 42
+#Region '.\Public\Update-Device\Update-DeviceManagedDeviceName.ps1' 0
 Function Update-DeviceManagedDeviceName() {
 
     <#
@@ -3404,11 +3736,13 @@ Function Update-DeviceManagedDeviceName() {
     [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
     Param(
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
-        $OS,
+        [string]$OS,
+
         [Parameter(Mandatory = $true)]
-        $DeviceName
+        [string]$DeviceName
     )
 
     $graphApiVersion = 'Beta'
@@ -3450,8 +3784,8 @@ Function Update-DeviceManagedDeviceName() {
         break
     }
 }
-#EndRegion './Public/Update-Device/Update-DeviceManagedDeviceName.ps1' 64
-#Region './Public/Update-Device/Update-DeviceOwnership.ps1' 0
+#EndRegion '.\Public\Update-Device\Update-DeviceManagedDeviceName.ps1' 65
+#Region '.\Public\Update-Device\Update-DeviceOwnership.ps1' 0
 Function Update-DeviceOwnership() {
 
     <#
@@ -3470,10 +3804,11 @@ Function Update-DeviceOwnership() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
         [ValidateSet('Company', 'Personal')]
-        $Ownership
+        [string]$Ownership
     )
     $graphApiVersion = 'Beta'
     $Resource = 'deviceManagement/managedDevices'
@@ -3495,279 +3830,4 @@ Function Update-DeviceOwnership() {
         break
     }
 }
-#EndRegion './Public/Update-Device/Update-DeviceOwnership.ps1' 44
-#Region './Public/New-Enrolment/New-EnrolmentAPProfile.ps1' 0
-Function New-EnrolmentAPProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/windowsAutopilotDeploymentProfiles'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Enrolment/New-EnrolmentAPProfile.ps1' 39
-#Region './Public/New-Enrolment/New-EnrolmentESP.ps1' 0
-Function New-EnrolmentESP() {
-
-    <#
-    .SYNOPSIS
-    This function is used to get Deivce Enrollment Configurations from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and gets Device Enrollment Configurations
-    .EXAMPLE
-    Get-DeviceEnrollmentConfigurations
-    Returns Device Enrollment Configurations configured in Intune
-    .NOTES
-    NAME: Get-DeviceEnrollmentConfigurations
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
-
-    try {
-        Test-MEMJSON -Json $JSON
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/New-Enrolment/New-EnrolmentESP.ps1' 39
-#Region './Public/Remove-Device/Remove-DeviceCompliancePolicy.ps1' 0
-Function Remove-DeviceCompliancePolicy() {
-
-    <#
-        .SYNOPSIS
-        This function is used to delete a device configuration policy from the Graph API REST interface
-        .DESCRIPTION
-        The function connects to the Graph API Interface and deletes a device compliance policy
-        .EXAMPLE
-        Remove-DeviceCompliancePolicy -id $id
-        Returns any device configuration policies configured in Intune
-        .NOTES
-        NAME: Remove-DeviceCompliancePolicy
-        #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceCompliancePolicies'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-Device/Remove-DeviceCompliancePolicy.ps1' 38
-#Region './Public/Remove-Device/Remove-DeviceConfigProfile.ps1' 0
-Function Remove-DeviceConfigProfile() {
-
-    <#
-    .SYNOPSIS
-    This function is used to remove a device configuration policies from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and removes a device configuration policies
-    .EXAMPLE
-    Remove-DeviceConfigProfile -id $id
-    Removes a device configuration policies configured in Intune
-    .NOTES
-    NAME: Remove-DeviceConfigProfile
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceConfigurations'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-Device/Remove-DeviceConfigProfile.ps1' 38
-#Region './Public/Remove-Device/Remove-DeviceFilter.ps1' 0
-Function Remove-DeviceFilter() {
-
-    <#
-    .SYNOPSIS
-    This function is used to remove a device configuration policies from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and removes a device configuration policies
-    .EXAMPLE
-    Remove-DeviceFilter -id $id
-    Removes a device configuration policies configured in Intune
-    .NOTES
-    NAME: Remove-DeviceFilter
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/assignmentFilters'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess("ShouldProcess?")) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-Device/Remove-DeviceFilter.ps1' 38
-#Region './Public/Remove-Device/Remove-DeviceScript.ps1' 0
-Function Remove-DeviceManagement() {
-
-    <#
-    .SYNOPSIS
-    This function is used to remove a device configuration policies from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and removes a device configuration policies
-    .EXAMPLE
-    Remove-DeviceManagementScript -id $id
-    Removes a device configuration policies configured in Intune
-    .NOTES
-    NAME: Remove-DeviceManagementScript
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceManagementScripts'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess("ShouldProcess?")) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-Device/Remove-DeviceScript.ps1' 38
-#Region './Public/Remove-Device/Remove-DeviceSettingsCatalog.ps1' 0
-Function Remove-DeviceSettingsCatalog() {
-
-    <#
-    .SYNOPSIS
-    This function is used to remove a device configuration policies from the Graph API REST interface
-    .DESCRIPTION
-    The function connects to the Graph API Interface and removes a device configuration policies
-    .EXAMPLE
-    Remove-DeviceSettingsCatalogProfile -id $id
-    Removes a device configuration policies configured in Intune
-    .NOTES
-    NAME: Remove-DeviceSettingsCatalogProfile
-    #>
-
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $id
-    )
-
-    $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/configurationPolicies'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Delete
-        }
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion './Public/Remove-Device/Remove-DeviceSettingsCatalog.ps1' 38
+#EndRegion '.\Public\Update-Device\Update-DeviceOwnership.ps1' 44

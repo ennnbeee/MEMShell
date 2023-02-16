@@ -17,12 +17,14 @@ Function Add-EnrolmentAutopilotProfileAssignment() {
     param
     (
         [parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [parameter(Mandatory = $true)]
-        $TargetGroupId,
+        [string]$TargetGroupId,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Include', 'Exclude')]
-        $AssignmentType
+        [string]$AssignmentType
     )
 
     $graphApiVersion = 'Beta'

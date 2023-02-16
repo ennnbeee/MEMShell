@@ -17,7 +17,7 @@ Function Get-EnrolmentESPAssignment() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $id
+        [string]$id
     )
 
     $graphApiVersion = 'Beta'

@@ -15,7 +15,7 @@ Function Test-AppPackageId() {
     [cmdletbinding()]
     param (
         [Parameter(Mandatory = $true)]
-        $packageId
+        [string]$packageId
     )
 
     $graphApiVersion = 'Beta'

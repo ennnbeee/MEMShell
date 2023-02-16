@@ -16,13 +16,13 @@ Function New-DeviceEndpointSecProfile() {
     param
     (
         [parameter(Mandatory = $true)]
-        $TemplateId,
+        [string]$Id,
         [parameter(Mandatory = $true)]
         $JSON
     )
 
     $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/templates/$TemplateId/createInstance"
+    $Resource = "deviceManagement/templates/$Id/createInstance"
 
     try {
         Test-MEMJSON -Json $JSON

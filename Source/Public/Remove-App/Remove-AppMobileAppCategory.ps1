@@ -16,9 +16,9 @@ Function Remove-AppMobileAppCategory() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
         [Parameter(Mandatory = $true)]
-        $CategoryId
+        [string]$CategoryId
     )
 
     $graphApiVersion = 'Beta'

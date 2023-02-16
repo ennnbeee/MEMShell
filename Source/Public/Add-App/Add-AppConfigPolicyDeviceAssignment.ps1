@@ -17,16 +17,21 @@ Function Add-AppConfigPolicyDeviceAssignment() {
     param
     (
         [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
         [ValidateSet('Include', 'Exclude')]
-        $FilterMode,
+        [string]$FilterMode,
+
         [ValidateSet('Users', 'Devices')]
-        $All
+        [string]$All
     )
 
     $graphApiVersion = 'beta'

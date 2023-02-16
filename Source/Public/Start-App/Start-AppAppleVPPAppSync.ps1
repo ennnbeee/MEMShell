@@ -15,7 +15,7 @@ Function Start-AppAppleVPPAppSync() {
 
     Param(
         [parameter(Mandatory = $true)]
-        $Id
+        [string]$Id
     )
 
     $graphApiVersion = 'beta'

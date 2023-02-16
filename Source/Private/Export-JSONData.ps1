@@ -12,11 +12,13 @@ Function Export-JSONData() {
     NAME: Export-JSONData
     #>
 
+    [cmdletbinding()]
     param (
         [parameter(Mandatory = $true)]
         $JSON,
+
         [parameter(Mandatory = $true)]
-        $ExportPath
+        [string]$ExportPath
     )
 
     try {

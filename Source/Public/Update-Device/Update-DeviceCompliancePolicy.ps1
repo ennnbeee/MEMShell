@@ -16,7 +16,8 @@ Function Update-DeviceCompliancePolicy() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
         $JSON
     )

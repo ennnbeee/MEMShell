@@ -16,10 +16,11 @@ Function Update-DeviceOwnership() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
         [ValidateSet('Company', 'Personal')]
-        $Ownership
+        [string]$Ownership
     )
     $graphApiVersion = 'Beta'
     $Resource = 'deviceManagement/managedDevices'

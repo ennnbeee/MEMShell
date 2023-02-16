@@ -16,7 +16,7 @@ Function Remove-DeviceFilter() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $id
+        [string]$id
     )
 
     $graphApiVersion = 'Beta'

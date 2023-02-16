@@ -17,24 +17,27 @@ Function Add-AppMobileAppAssignment() {
     (
         [parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        $Id,
+        [string]$Id,
+
         [parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
-        $TargetGroupId,
+        [string]$TargetGroupId,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Available', 'Required')]
-        [ValidateNotNullOrEmpty()]
-        $InstallIntent,
-        $FilterID,
+        [string]$InstallIntent,
+
+        [string]$FilterID,
+
         [ValidateSet('Include', 'Exclude')]
-        $FilterMode,
+        [string]$FilterMode,
+
         [parameter(Mandatory = $false)]
         [ValidateSet('Users', 'Devices')]
-        [ValidateNotNullOrEmpty()]
-        $All,
+        [string]$All,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Replace', 'Add')]
-        $Action
+        [string]$Action
     )
 
     $graphApiVersion = 'beta'

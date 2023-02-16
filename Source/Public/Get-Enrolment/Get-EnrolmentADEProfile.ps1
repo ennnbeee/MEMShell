@@ -16,7 +16,7 @@ Function Get-EnrolmentADEProfile() {
 
     Param(
         [Parameter(Mandatory = $true)]
-        $Id
+        [string]$Id
     )
 
     $graphApiVersion = 'Beta'

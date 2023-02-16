@@ -17,6 +17,7 @@ Function New-DeviceManagementScript() {
         # Path or URL to Powershell-script to add to Intune
         [Parameter(Mandatory = $true)]
         [string]$File,
+
         # PowerShell description in Intune
         [Parameter(Mandatory = $false)]
         [string]$Description

@@ -17,7 +17,7 @@ Function Add-AppCategory() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Name
+        [string]$Name
     )
 
     $graphApiVersion = 'Beta'

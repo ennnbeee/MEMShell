@@ -16,7 +16,7 @@ Function Get-AuthTokenMSAL {
     param
     (
         [Parameter(Mandatory = $true)]
-        $User
+        [string]$User
     )
 
     $userUpn = New-Object 'System.Net.Mail.MailAddress' -ArgumentList $User

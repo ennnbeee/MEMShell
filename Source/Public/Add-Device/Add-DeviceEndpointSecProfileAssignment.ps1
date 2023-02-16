@@ -17,15 +17,21 @@ Function Add-DeviceEndpointSecurityAssignment() {
     param
     (
         [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        $FilterMode,
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [ValidateSet('Include', 'Exclude')]
+        [string]$FilterMode,
+
         [ValidateSet('Users', 'Devices')]
-        $All
+        [string]$All
     )
 
     $graphApiVersion = 'Beta'

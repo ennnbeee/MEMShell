@@ -17,13 +17,15 @@ Function Add-AppProtectionPolicyAssignment() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
         [Parameter(Mandatory = $true)]
         [ValidateSet('Android', 'iOS')]
         [string]$OS,
+
         [ValidateSet('Include', 'Exclude')]
-        [ValidateNotNullOrEmpty()]
         [string]$AssignmentType
     )
 

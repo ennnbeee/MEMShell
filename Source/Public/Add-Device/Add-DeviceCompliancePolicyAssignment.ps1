@@ -17,15 +17,20 @@ Function Add-DeviceCompliancePolicyAssignment() {
     param
     (
         [parameter(Mandatory = $true)]
-        $Id,
-        $TargetGroupId,
+        [string]$Id,
+
+        [string]$TargetGroupId,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Include', 'Exclude')]
-        $AssignmentType,
-        $FilterID,
-        $FilterMode,
+        [string]$AssignmentType,
+
+        [string]$FilterID,
+
+        [string]$FilterMode,
+
         [ValidateSet('Users', 'Devices')]
-        $All
+        [string]$All
     )
 
     $graphApiVersion = 'v1.0'

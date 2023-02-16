@@ -16,11 +16,14 @@ Function Invoke-MEMRestMethod() {
     param (
         [parameter(Mandatory = $true)]
         [uri]$Uri,
+
         [parameter(Mandatory = $true)]
         [ValidateSet('Delete', 'Get', 'Patch', 'Post', 'Put')]
-        $Method,
-        $Body,
-        $ContentType = 'application/json'
+        [string]$Method,
+
+        [string]$Body,
+
+        [string]$ContentType = 'application/json'
     )
 
     if ($global:authToken) {

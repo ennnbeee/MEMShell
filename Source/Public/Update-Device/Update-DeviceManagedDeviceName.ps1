@@ -15,11 +15,13 @@ Function Update-DeviceManagedDeviceName() {
     [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
     Param(
         [Parameter(Mandatory = $true)]
-        $Id,
+        [string]$Id,
+
         [Parameter(Mandatory = $true)]
-        $OS,
+        [string]$OS,
+
         [Parameter(Mandatory = $true)]
-        $DeviceName
+        [string]$DeviceName
     )
 
     $graphApiVersion = 'Beta'

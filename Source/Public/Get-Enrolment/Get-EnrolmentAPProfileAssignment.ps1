@@ -17,7 +17,7 @@ Function Get-EnrolmentAPProfileAssignment() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $Id
+        [string]$Id
     )
 
     $graphApiVersion = 'Beta'

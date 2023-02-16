@@ -16,14 +16,14 @@ Function Remove-AppConfigPolicyDevice() {
     param
     (
         [Parameter(Mandatory = $true)]
-        $id
+        [string]$Id
     )
 
     $graphApiVersion = 'Beta'
     $Resource = 'deviceAppManagement/mobileAppConfigurations'
 
     try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$id"
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$Id"
         if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
             Invoke-MEMRestMethod -Uri $uri -Method Delete
         }
