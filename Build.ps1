@@ -11,3 +11,11 @@ $Params = @{
 }
 
 Build-Module @params
+
+$Files = Get-ChildItem -Path "$PSScriptRoot\Output\"
+Foreach ($File in $Files){
+    Move-Item -Path $File.FullName -Destination "$PSScriptRoot\Source" -Force
+
+}
+Remove-Item -Path "$PSScriptRoot\Output" -Recurse -Force
+
