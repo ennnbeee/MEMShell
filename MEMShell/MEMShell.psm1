@@ -1,5 +1,3 @@
-Set-StrictMode -Version Latest
-
 #$Functions = Get-ChildItem -Path $PSScriptRoot\functions\*.ps1
 $Functions = Get-ChildItem -Path $PSScriptRoot -Recurse -Filter '*.ps1'
 
