@@ -28,7 +28,5 @@ jobs:
         env:
           NUGET_KEY: ${{ secrets.PSGALLERYAPIKEY }}
         run: |
-          dotnet tool restore
-          $gvOutput = dotnet tool run dotnet-gitversion /config GitVersion.yml | Out-String | ConvertFrom-Json
-          ./Build.ps1 -buildVersion $gvOutput.MajorMinorPatch -apiKey $ENV:NUGET_KEY
+          ./Build.ps1 -buildVersion $GitVersion_FullSemVer -apiKey $ENV:NUGET_KEY
 

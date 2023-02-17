@@ -6,7 +6,6 @@ param (
 $Global:ErrorActionPreference = 'Stop'
 $Global:VerbosePreference = 'SilentlyContinue'
 
-#$buildVersion = $env:BUILDVER
 $manifestPath = './MEMShell/MEMShell.psd1'
 $publicFuncFolderPath = './MEMShell'
 
