@@ -22,13 +22,13 @@ if ((Get-PSRepository -Name PSGallery).InstallationPolicy -ne 'Trusted') {
 $manifestContent = (Get-Content -Path $manifestPath -Raw) -replace '<ModuleVersion>', $buildVersion
 
 if ((Test-Path -Path $publicFuncFolderPath) -and ($publicFunctionNames = Get-ChildItem -Path $publicFuncFolderPath -Recurse -Filter '*.ps1' | Select-Object -ExpandProperty BaseName)) {
-    $funcStrings = "'$($publicFunctionNames -join "','")'"
+    $FuncStrings = "'$($publicFunctionNames -join "','")'"
 }
 else {
-    $funcStrings = $null
+    $FuncStrings = $null
 }
 
 $manifestContent = $manifestContent -replace "'<FunctionsToExport>'", $funcStrings
 $manifestContent | Set-Content -Path $manifestPath
 
-Publish-Module -path ./MEMShell -NuGetApiKey $apiKey -Verbose
+Publish-Module -Path ./MEMShell -NuGetApiKey $apiKey -Verbose
