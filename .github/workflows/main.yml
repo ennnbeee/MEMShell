@@ -20,7 +20,7 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -33,11 +33,10 @@ jobs:
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.7
 
-    # Runs
     - name: Publish with PowerShell
       env:
         NUGET_KEY: ${{ secrets.PSGALLERYAPIKEY }}
-        Version: ${{ steps.gitversion.outputs.AssemblySemVer }}
+        Version: ${{ steps.gitversion.outputs.majorMinorPatch }}
       run: |
         ./Build.ps1 -buildVersion $Version $ENV:Version -apiKey $ENV:NUGET_KEY
 

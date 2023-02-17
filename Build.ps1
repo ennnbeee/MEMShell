@@ -18,7 +18,7 @@ if ((Get-PSRepository -Name PSGallery).InstallationPolicy -ne 'Trusted') {
     Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 }
 
-$manifestContent = (Get-Content -Path $manifestPath -Raw) -replace '<ModuleVersion>', $buildVersion
+$manifestContent = (Get-Content -Path $manifestPath -Raw) -replace "'<ModuleVersion>'", $buildVersion
 
 if ((Test-Path -Path $publicFuncFolderPath) -and ($publicFunctionNames = Get-ChildItem -Path $publicFuncFolderPath -Recurse -Filter '*.ps1' | Select-Object -ExpandProperty BaseName)) {
     $FuncStrings = "'$($publicFunctionNames -join "','")'"
