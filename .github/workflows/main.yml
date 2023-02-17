@@ -1,5 +1,4 @@
 # This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the workflow will run
@@ -25,5 +24,5 @@ jobs:
           BUILDVER: '1.0.0'
         shell: pwsh
         run: |
-          ./build_scripts/build.ps1
-          Publish-Module -path ./jtAz -NuGetApiKey $env:NUGET_KEY -Verbose
+          ./build.ps1
+          Publish-Module -path ./MEMShell -NuGetApiKey $env:NUGET_KEY -Verbose
