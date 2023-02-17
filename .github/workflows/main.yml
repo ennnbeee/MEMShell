@@ -33,15 +33,11 @@ jobs:
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.7
 
-    - name: Display GitVersion outputs
-      run: |
-        echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
-
     # Runs
     - name: Publish with PowerShell
       env:
         NUGET_KEY: ${{ secrets.PSGALLERYAPIKEY }}
-        Version: ${{ steps.gitversion.outputs.majorMinorPatch }}
+        Version: ${{ steps.gitversion.outputs.AssemblySemVer }}
       run: |
         ./Build.ps1 -buildVersion $Version $ENV:Version -apiKey $ENV:NUGET_KEY
 
