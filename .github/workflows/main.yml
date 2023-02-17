@@ -27,6 +27,10 @@ jobs:
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0.9.7
 
+    - name: Display GitVersion outputs
+        run: |
+          echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
       - uses: actions/checkout@v2
@@ -39,6 +43,5 @@ jobs:
           NUGET_KEY: ${{ secrets.PSGALLERYAPIKEY }}
           Version: ${{ steps.gitversion.outputs.majorMinorPatch }}
         run: |
-          $Version =
           ./Build.ps1 -buildVersion $Version $ENV:Version -apiKey $ENV:NUGET_KEY
 
