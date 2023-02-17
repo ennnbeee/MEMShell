@@ -1,7 +1,12 @@
+param (
+    [string] $buildVersion,
+    [string] $apiKey
+)
+
 $Global:ErrorActionPreference = 'Stop'
 $Global:VerbosePreference = 'SilentlyContinue'
 
-$buildVersion = $env:BUILDVER
+#$buildVersion = $env:BUILDVER
 $manifestPath = './MEMShell/MEMShell.psd1'
 $publicFuncFolderPath = './MEMShell'
 
@@ -25,3 +30,5 @@ else {
 
 $manifestContent = $manifestContent -replace "'<FunctionsToExport>'", $funcStrings
 $manifestContent | Set-Content -Path $manifestPath
+
+Publish-Module -path ./MEMShell -NuGetApiKey $apiKey -Verbose

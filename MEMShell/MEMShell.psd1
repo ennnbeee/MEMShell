@@ -18,7 +18,7 @@ ModuleVersion = '<ModuleVersion>'
 CompatiblePSEditions = 'Core', 'Desktop'
 
 # ID used to uniquely identify this module
-GUID = '16da5369-9181-4ee6-83a2-0fff5e380a5c'
+GUID = '29eb3180-2f17-4232-b739-8bc2d24a6506'
 
 # Author of this module
 Author = 'Nick Benton'
