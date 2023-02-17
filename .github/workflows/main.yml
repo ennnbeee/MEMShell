@@ -18,6 +18,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
@@ -30,12 +36,6 @@ jobs:
     - name: Display GitVersion outputs
       run: |
         echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
-
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
 
     # Runs
     - name: Publish with PowerShell
