@@ -18,15 +18,27 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: '5.x'
+
+    - name: Determine Version
+        id:   gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
       # Runs
-      - name: Publish with powershell
+      - name: Publish with PowerShell
         env:
           NUGET_KEY: ${{ secrets.PSGALLERYAPIKEY }}
+          Version: ${{ steps.gitversion.outputs.majorMinorPatch }}
         run: |
-          ./Build.ps1 -buildVersion $GitVersion_FullSemVer -apiKey $ENV:NUGET_KEY
+          $Version =
+          ./Build.ps1 -buildVersion $Version $ENV:Version -apiKey $ENV:NUGET_KEY
 
