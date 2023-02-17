@@ -15,10 +15,10 @@ RootModule = 'MEMShell.psm1'
 ModuleVersion = '<ModuleVersion>'
 
 # Supported PSEditions
-CompatiblePSEditions = 'Core', 'Desktop'
+# CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
-GUID = '29eb3180-2f17-4232-b739-8bc2d24a6506'
+GUID = 'f8bcbf42-8c7b-4f79-8582-6e3a5589707d'
 
 # Author of this module
 Author = 'Nick Benton'
@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'intune'
+        Tags = 'intune','PSEdition_Desktop','PSEdition_Core'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/ennnbeee/MEMShell/blob/main/LICENSE'
