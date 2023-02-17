@@ -24,7 +24,7 @@ jobs:
         versionSpec: '5.x'
 
     - name: Determine Version
-        id:   gitversion
+        id: gitversion
         uses: gittools/actions/gitversion/execute@v0.9.7
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
