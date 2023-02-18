@@ -2569,6 +2569,77 @@ Function Get-MEMGroupMember() {
     }
 }
 #EndRegion '.\Public\Get-Group\Get-MEMGroupMember.ps1' 38
+#Region '.\Public\Invoke-App\Invoke-AppAppleVPPAppSync.ps1' 0
+Function Invoke-AppAppleVPPAppSync() {
+
+    <#
+    .SYNOPSIS
+    Sync Intune tenant to Apple DEP service
+    .DESCRIPTION
+    Intune automatically syncs with the Apple DEP service once every 24hrs. This function synchronises your Intune tenant with the Apple DEP service.
+    .EXAMPLE
+    Sync-AppleDEP
+    .NOTES
+    NAME: Sync-AppleDEP
+    #>
+
+    [cmdletbinding()]
+
+    Param(
+        [parameter(Mandatory = $true)]
+        [string]$Id
+    )
+
+    $graphApiVersion = 'beta'
+    $Resource = "deviceManagement/depOnboardingSettings/$id/syncWithAppleDeviceEnrollmentProgram"
+
+    try {
+
+        $Uri = "https://graph.microsoft.com/$graphApiVersion/$($resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post
+
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Invoke-App\Invoke-AppAppleVPPAppSync.ps1' 36
+#Region '.\Public\Invoke-App\Invoke-AppGooglePlayAppSync.ps1' 0
+Function Invoke-AppGooglePlayAppSync() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    $graphApiVersion = 'Beta'
+    $Resource = '/deviceManagement/androidManagedStoreAccountEnterpriseSettings/syncApps'
+
+    try {
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post
+
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion '.\Public\Invoke-App\Invoke-AppGooglePlayAppSync.ps1' 31
 #Region '.\Public\New-App\New-AppConfigPolicyApp.ps1' 0
 Function New-AppConfigPolicyApp() {
 
@@ -3559,77 +3630,6 @@ Function Remove-DeviceSettingsCatalog() {
     }
 }
 #EndRegion '.\Public\Remove-Device\Remove-DeviceSettingsCatalog.ps1' 37
-#Region '.\Public\Start-App\Start-AppAppleVPPAppSync.ps1' 0
-Function Start-AppAppleVPPAppSync() {
-
-    <#
-    .SYNOPSIS
-    Sync Intune tenant to Apple DEP service
-    .DESCRIPTION
-    Intune automatically syncs with the Apple DEP service once every 24hrs. This function synchronises your Intune tenant with the Apple DEP service.
-    .EXAMPLE
-    Sync-AppleDEP
-    .NOTES
-    NAME: Sync-AppleDEP
-    #>
-
-    [cmdletbinding()]
-
-    Param(
-        [parameter(Mandatory = $true)]
-        [string]$Id
-    )
-
-    $graphApiVersion = 'beta'
-    $Resource = "deviceManagement/depOnboardingSettings/$id/syncWithAppleDeviceEnrollmentProgram"
-
-    try {
-
-        $Uri = "https://graph.microsoft.com/$graphApiVersion/$($resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post
-
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion '.\Public\Start-App\Start-AppAppleVPPAppSync.ps1' 36
-#Region '.\Public\Start-App\Start-AppGooglePlayAppSync.ps1' 0
-Function Start-AppGooglePlayAppSync() {
-
-    <#
-    .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
-    .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
-    .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
-    .NOTES
-    NAME: Get-AuthTokenMSAL
-    #>
-
-    [cmdletbinding()]
-
-    $graphApiVersion = 'Beta'
-    $Resource = '/deviceManagement/androidManagedStoreAccountEnterpriseSettings/syncApps'
-
-    try {
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Post
-
-    }
-    catch {
-        $exs = $Error
-        $ex = $exs[0]
-        Write-Error "`n$ex"
-        break
-    }
-}
-#EndRegion '.\Public\Start-App\Start-AppGooglePlayAppSync.ps1' 31
 #Region '.\Public\Update-Device\Update-DeviceAPDevice.ps1' 0
 Function Update-DeviceAP() {
 

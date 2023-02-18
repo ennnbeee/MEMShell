@@ -46,10 +46,10 @@
 
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules   = @( @{
-            ModuleName    = 'MSAL.PS'
-            ModuleVersion = '4.37.0'
-        }
-    )
+        ModuleName    = 'MSAL.PS'
+        ModuleVersion = '4.37.0'
+    }
+)
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()

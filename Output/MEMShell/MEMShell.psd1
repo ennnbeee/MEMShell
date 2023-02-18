@@ -4,7 +4,7 @@
     RootModule        = 'MEMShell.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.1.2'
+    ModuleVersion     = '1.0.0'
 
     PrivateData       = @{
         # PrivateData.PSData is the PowerShell Gallery data
@@ -46,10 +46,10 @@
 
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules   = @( @{
-            ModuleName    = 'MSAL.PS'
-            ModuleVersion = '4.37.0'
-        }
-    )
+        ModuleName    = 'MSAL.PS'
+        ModuleVersion = '4.37.0'
+    }
+)
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -67,7 +67,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Add-AppCategory','Add-AppConfigPolicyDeviceAssignment','Add-AppMobileAppAssignment','Add-AppMobileAppCategory','Add-AppProtectionPolicyAssignment','Add-DeviceCompliancePolicyAssignment','Add-DeviceConfigProfileAssignment','Add-DeviceEndpointSecProfileAssignment','Add-DeviceSettingsCatalogAssignment','Add-EnrolmentADEProfileAssignment','Add-EnrolmentAutopilotProfileAssignment','Add-EnrolmentESPAssignment','Add-EnrolmentRestrictionAssignment','Get-AppCategory','Get-AppConfigPolicyApp','Get-AppConfigPolicyDevice','Get-AppMobileApp','Get-AppMobileAppAssignment','Get-AppMobileAppCategory','Get-AppProtectionPolicy','Get-DeviceAutopilot','Get-DeviceCompliancePolicy','Get-DeviceCompliancePolicyScript','Get-DeviceConfigProfile','Get-DeviceConfigProfileAssignment','Get-DeviceEndpointSecProfile','Get-DeviceEndpointSecTemplate','Get-DeviceEnrolmentRestriction','Get-DeviceFilter','Get-DeviceManagedDevice','Get-DeviceNotificationMessage','Get-DeviceNotificationTemplate','Get-DeviceScript','Get-DeviceScriptAssignment','Get-DeviceSettingsCatalog','Get-DeviceUpdatePolicy','Get-EnrolmentADEProfile','Get-EnrolmentADEToken','Get-EnrolmentAPProfile','Get-EnrolmentAPProfileAssignment','Get-EnrolmentESP','Get-EnrolmentESPAssignment','Get-MEMGroup','Get-MEMGroupMember','New-AppConfigPolicyApp','New-AppConfigPolicyDevice','New-AppManagedGooglePlayApp','New-AppProtectionPolicy','New-DeviceCompliancePolicy','New-DeviceConfigProfile','New-DeviceEndpointSecProfile','New-DeviceFilter','New-DeviceNotificationMessage','New-DeviceNotificationTemplate','New-DeviceScript','New-DeviceSettingCatalog','New-EnrolmentAPProfile','New-EnrolmentESP','Remove-AppConfigPolicyApp','Remove-AppConfigPolicyDevice','Remove-AppMobileAppAssignment','Remove-AppMobileAppCategory','Remove-AppProtectionPolicy','Remove-DeviceCompliancePolicy','Remove-DeviceConfigProfile','Remove-DeviceFilter','Remove-DeviceScript','Remove-DeviceSettingsCatalog','Start-AppAppleVPPAppSync','Start-AppGooglePlayAppSync','Update-DeviceAPDevice','Update-DeviceCompliancePolicy','Update-DeviceManagedDeviceName','Update-DeviceOwnership')
+    FunctionsToExport = @('Add-AppCategory','Add-AppConfigPolicyDeviceAssignment','Add-AppMobileAppAssignment','Add-AppMobileAppCategory','Add-AppProtectionPolicyAssignment','Add-DeviceCompliancePolicyAssignment','Add-DeviceConfigProfileAssignment','Add-DeviceEndpointSecProfileAssignment','Add-DeviceSettingsCatalogAssignment','Add-EnrolmentADEProfileAssignment','Add-EnrolmentAutopilotProfileAssignment','Add-EnrolmentESPAssignment','Add-EnrolmentRestrictionAssignment','Get-AppCategory','Get-AppConfigPolicyApp','Get-AppConfigPolicyDevice','Get-AppMobileApp','Get-AppMobileAppAssignment','Get-AppMobileAppCategory','Get-AppProtectionPolicy','Get-DeviceAutopilot','Get-DeviceCompliancePolicy','Get-DeviceCompliancePolicyScript','Get-DeviceConfigProfile','Get-DeviceConfigProfileAssignment','Get-DeviceEndpointSecProfile','Get-DeviceEndpointSecTemplate','Get-DeviceEnrolmentRestriction','Get-DeviceFilter','Get-DeviceManagedDevice','Get-DeviceNotificationMessage','Get-DeviceNotificationTemplate','Get-DeviceScript','Get-DeviceScriptAssignment','Get-DeviceSettingsCatalog','Get-DeviceUpdatePolicy','Get-EnrolmentADEProfile','Get-EnrolmentADEToken','Get-EnrolmentAPProfile','Get-EnrolmentAPProfileAssignment','Get-EnrolmentESP','Get-EnrolmentESPAssignment','Get-MEMGroup','Get-MEMGroupMember','Invoke-AppAppleVPPAppSync','Invoke-AppGooglePlayAppSync','New-AppConfigPolicyApp','New-AppConfigPolicyDevice','New-AppManagedGooglePlayApp','New-AppProtectionPolicy','New-DeviceCompliancePolicy','New-DeviceConfigProfile','New-DeviceEndpointSecProfile','New-DeviceFilter','New-DeviceNotificationMessage','New-DeviceNotificationTemplate','New-DeviceScript','New-DeviceSettingCatalog','New-EnrolmentAPProfile','New-EnrolmentESP','Remove-AppConfigPolicyApp','Remove-AppConfigPolicyDevice','Remove-AppMobileAppAssignment','Remove-AppMobileAppCategory','Remove-AppProtectionPolicy','Remove-DeviceCompliancePolicy','Remove-DeviceConfigProfile','Remove-DeviceFilter','Remove-DeviceScript','Remove-DeviceSettingsCatalog','Update-DeviceAPDevice','Update-DeviceCompliancePolicy','Update-DeviceManagedDeviceName','Update-DeviceOwnership')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @()

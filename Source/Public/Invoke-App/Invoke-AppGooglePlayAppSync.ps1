@@ -1,4 +1,4 @@
-Function Start-AppGooglePlayAppSync() {
+Function Invoke-AppGooglePlayAppSync() {
 
     <#
     .SYNOPSIS

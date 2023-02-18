@@ -1,4 +1,4 @@
-Function Start-AppAppleVPPAppSync() {
+Function Invoke-AppAppleVPPAppSync() {
 
     <#
     .SYNOPSIS
