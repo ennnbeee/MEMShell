@@ -31,13 +31,16 @@ Function Export-JSONData() {
             $JSON = ConvertTo-Json $JSON -Depth 5
             $JSON_Convert = $JSON | ConvertFrom-Json
             $displayName = $JSON_Convert.displayName
-
+            If ($null -eq $displayName) {
+                $displayName = $JSON_Convert.name
+            }
             # Updating display name to follow file naming conventions - https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
             $DisplayName = $DisplayName -replace '\<|\>|:|"|/|\\|\||\?|\*', '_'
+
             $FileName_JSON = "$DisplayName" + '_' + $(Get-Date -f dd-MM-yyyy-H-mm-ss) + '.json'
 
             $JSON | Set-Content -LiteralPath "$ExportPath\$FileName_JSON"
-            Write-Information "JSON created in $ExportPath\$FileName_JSON..."
+            Write-Information "JSON created in $ExportPath\$FileName_JSON"
         }
     }
     catch {
