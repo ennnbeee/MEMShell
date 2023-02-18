@@ -5,5 +5,5 @@
     # Subsequent relative paths are to the ModuleManifest
     OutputDirectory = "../Output/MEMShell"
     VersionedOutputDirectory = $false
-    CopyDirectories = @('Private', 'Public')
+    CopyDirectories = @()
 }
