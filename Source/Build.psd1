@@ -4,6 +4,6 @@
     ModuleManifest  = "MEMShell.psd1"
     # Subsequent relative paths are to the ModuleManifest
     OutputDirectory = "../Output/MEMShell"
-    VersionedOutputDirectory = $true
-    CopyDirectories = @('')
+    VersionedOutputDirectory = $false
+    CopyDirectories = @('Private', 'Public')
 }

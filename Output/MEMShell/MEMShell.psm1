@@ -171,19 +171,19 @@ Function Invoke-MEMRestMethod() {
 
             Write-Output "Authentication Token expired $TokenExpires minutes ago"
             # Defining User Principal Name if not present
-            if ($null -eq $User -or $User -eq '') {
-                $User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
+            if ($null -eq $global:User -or $global:User -eq '') {
+                $global:User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
             }
-            $global:authToken = Get-AuthTokenMSAL -User $User
+            $global:authToken = Get-AuthTokenMSAL -User $global:User
         }
     }
     # Authentication doesn't exist, calling Get-AuthToken function
     else {
-        if ($null -eq $User -or $User -eq '') {
-            $User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
+        if ($null -eq $global:User -or $global:User -eq '') {
+            $global:User = Read-Host -Prompt 'Please specify your user principal name for Azure Authentication'
         }
         # Getting the authorization token
-        $global:authToken = Get-AuthTokenMSAL -User $User
+        $global:authToken = Get-AuthTokenMSAL -User $global:User
     }
 
     $global:authToken['ConsistencyLevel'] = 'eventual'
