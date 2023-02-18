@@ -36,8 +36,7 @@ jobs:
 
     - name: Show Version
       run: |
-        echo "Major: ${{ steps.gitversion.outputs.majorMinorPatch }}"
-        echo "SemVer: $GITVERSION_SEMVER"
+        echo "Version: ${{ steps.gitversion.outputs.majorMinorPatch }}"
 
     - name: Install PowerShell modules
       if: success()
