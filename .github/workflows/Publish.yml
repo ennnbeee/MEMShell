@@ -36,6 +36,6 @@ jobs:
     - name: Publish with PowerShell
       env:
         NUGET_KEY: ${{ secrets.PSGALLERYAPIKEY }}
-        Version: ${{ steps.release.outputs.version }}
+        Version: ${{ github.ref }}
       run: |
         ./Build.ps1 -Version $ENV:Version -APIKey $ENV:NUGET_KEY -Publish
