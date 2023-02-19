@@ -4,12 +4,13 @@ Function Export-JSONSettings() {
     .SYNOPSIS
     This function is used to get export JSON data from Intune
     .DESCRIPTION
-    The function connects to the Graph API Interface and gets any autopilot devices
+    The function connects allows data collected from another Intune Function to be exported to JSON files
     .EXAMPLE
-    Get-AutopilotDevices
+    $Compliance = Get-DeviceComplicyPolicy
+    Export-JSONSettings -Path 'C:\Temp\Output' -Settings $Compliance
     Returns any autopilot devices
     .NOTES
-    NAME: Get-AutopilotDevices
+    NAME: Export-JSONSettings
     #>
     [cmdletbinding()]
     param
