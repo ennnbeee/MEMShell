@@ -6,7 +6,7 @@ Function Export-JSONData() {
     .DESCRIPTION
     This function is used to export JSON data returned from Graph
     .EXAMPLE
-    Export-JSONData -JSON $JSON
+    Export-JSONData -JSON $JSON -ExportPath 'C:\Temp\Output'
     Export the JSON inputted on the function
     .NOTES
     NAME: Export-JSONData
