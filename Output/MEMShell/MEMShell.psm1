@@ -2608,7 +2608,7 @@ Function Export-JSONSettings() {
 
     <#
     .SYNOPSIS
-    This function is used to get autopilot devices via the Graph API REST interface
+    This function is used to get export JSON data from Intune
     .DESCRIPTION
     The function connects to the Graph API Interface and gets any autopilot devices
     .EXAMPLE
