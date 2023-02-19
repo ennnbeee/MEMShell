@@ -1,16 +1,17 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Publish
+name: Release and Publish
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
     branches: ["main"]
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -25,6 +26,9 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: "Determine tag"
+      run: "echo \"RELEASE_TAG=${GITHUB_REF#refs/tags/}\" >> $GITHUB_ENV"
+
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
@@ -37,6 +41,19 @@ jobs:
     - name: Show Version
       run: |
         echo "Version: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Release ${{ github.ref }}
+        draft: false
+        prerelease: false
 
     - name: Install PowerShell modules
       if: success()
@@ -51,4 +68,4 @@ jobs:
         NUGET_KEY: ${{ secrets.PSGALLERYAPIKEY }}
         Version: ${{ steps.gitversion.outputs.majorMinorPatch }}
       run: |
-        ./Build.ps1 -Version $ENV:Version -APIKey $ENV:NUGET_KEY
+        ./Build.ps1 -Version $ENV:Version -APIKey $ENV:NUGET_KEY -Publish

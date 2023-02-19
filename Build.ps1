@@ -1,7 +1,12 @@
 param(
+    [Parameter(Mandatory = $true)]
     [version]$Version,
-    [string]$APIKey
+
+    [string]$APIKey,
+
+    [switch]$Publish
 )
+
 #Requires -Module ModuleBuilder
 
 $Output = "$PSScriptRoot\Output\MEMShell"
@@ -9,10 +14,12 @@ $Output = "$PSScriptRoot\Output\MEMShell"
 $Params = @{
     SourcePath = "$PSScriptRoot\Source\MEMShell.psd1"
     #CopyPaths = @("$PSScriptRoot\README.md")
-    Version = $Version
+    Version    = $Version
     #UnversionedOutputDirectory = $true
 }
 
 Build-Module @params
 
-Publish-Module -Name $Output -NuGetApiKey $APIKey -SkipAutomaticTags
+If ($Publish) {
+    Publish-Module -Name $Output -NuGetApiKey $APIKey -SkipAutomaticTags
+}
