@@ -17,7 +17,7 @@ Function Get-MEMGroup() {
     param
     (
         [parameter(Mandatory = $true)]
-        [string]$GroupName
+        [string]$Name
     )
 
     $graphApiVersion = 'beta'
@@ -25,7 +25,7 @@ Function Get-MEMGroup() {
 
     try {
         $authToken['ConsistencyLevel'] = 'eventual'
-        $searchterm = 'search="displayName:' + $GroupName + '"'
+        $searchterm = 'search="displayName:' + $Name + '"'
         $uri = "https://graph.microsoft.com/$graphApiVersion/$Resource`?$searchterm"
         (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).Value
     }

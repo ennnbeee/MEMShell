@@ -1,4 +1,4 @@
-Function Get-DeviceCompliancePolicyScript() {
+Function New-EnrolmentRestriction() {
 
     <#
     .SYNOPSIS
@@ -12,14 +12,22 @@ Function Get-DeviceCompliancePolicyScript() {
     NAME: Get-DeviceEnrollmentConfigurations
     #>
 
-    [cmdletbinding()]
+    [cmdletbinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        $JSON
+    )
 
     $graphApiVersion = 'Beta'
-    $Resource = 'deviceManagement/deviceComplianceScripts'
+    $Resource = 'deviceManagement/deviceEnrollmentConfigurations'
 
     try {
+        Test-Json -Json $JSON
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        Invoke-MEMRestMethod -Uri $uri -Method Get
+        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
+            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+        }
     }
     catch {
         $exs = $Error

@@ -1,4 +1,4 @@
-Function Get-DeviceEnrollRestriction() {
+Function Get-EnrolmentRestriction() {
 
     <#
     .SYNOPSIS

@@ -1,4 +1,4 @@
-Function New-DeviceNotificationMessage() {
+Function Get-DeviceComplianceScript() {
 
     <#
     .SYNOPSIS
@@ -12,24 +12,14 @@ Function New-DeviceNotificationMessage() {
     NAME: Get-DeviceEnrollmentConfigurations
     #>
 
-    [cmdletbinding(SupportsShouldProcess, ConfirmImpact='Medium')]
-    param
-    (
-        [parameter(Mandatory = $true)]
-        [string]$Id,
-        [parameter(Mandatory = $true)]
-        $JSON
-    )
+    [cmdletbinding()]
 
     $graphApiVersion = 'Beta'
-    $Resource = "deviceManagement/notificationMessageTemplates/$Id/localizedNotificationMessages"
+    $Resource = 'deviceManagement/deviceComplianceScripts'
 
     try {
-        Test-MEMJSON -Json $JSON
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        if ($PSCmdlet.ShouldProcess('ShouldProcess?')) {
-            Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
-        }
+        Invoke-MEMRestMethod -Uri $uri -Method Get
     }
     catch {
         $exs = $Error

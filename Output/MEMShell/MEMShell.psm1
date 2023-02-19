@@ -7,7 +7,7 @@ Function Export-JSONData() {
     .DESCRIPTION
     This function is used to export JSON data returned from Graph
     .EXAMPLE
-    Export-JSONData -JSON $JSON
+    Export-JSONData -JSON $JSON -ExportPath 'C:\Temp\Output'
     Export the JSON inputted on the function
     .NOTES
     NAME: Export-JSONData
@@ -2610,12 +2610,13 @@ Function Export-JSONSettings() {
     .SYNOPSIS
     This function is used to get export JSON data from Intune
     .DESCRIPTION
-    The function connects to the Graph API Interface and gets any autopilot devices
+    The function connects allows data collected from another Intune Function to be exported to JSON files
     .EXAMPLE
-    Get-AutopilotDevices
+    $Compliance = Get-DeviceComplicyPolicy
+    Export-JSONSettings -Path 'C:\Temp\Output' -Settings $Compliance
     Returns any autopilot devices
     .NOTES
-    NAME: Get-AutopilotDevices
+    NAME: Export-JSONSettings
     #>
     [cmdletbinding()]
     param
@@ -2653,7 +2654,7 @@ Function Export-JSONSettings() {
     }
 
 }
-#EndRegion './Public/Export-JSON/Export-JSONSettings.ps1' 50
+#EndRegion './Public/Export-JSON/Export-JSONSettings.ps1' 51
 #Region './Public/Get-App/Get-AppCategory.ps1' 0
 Function Get-AppCategory() {
 
