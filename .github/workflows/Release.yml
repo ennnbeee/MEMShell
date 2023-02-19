@@ -1,13 +1,12 @@
 name: Release
 on:
   push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - '*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    branches: ["main"]
 
 jobs:
   build:
     name: Create Release
+    if: "contains(github.event.head_commit.message, 'Release')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
