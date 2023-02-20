@@ -23,7 +23,7 @@ Function New-DeviceComplianceScript() {
     )
 
     if (!(Test-Path $File)) {
-        Write-Host "$File could not be located." -ForegroundColor Red
+        Write-Error "$File could not be located."
         break
     }
     $FileName = Get-Item $File | Select-Object -ExpandProperty Name

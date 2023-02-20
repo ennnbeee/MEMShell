@@ -14,10 +14,12 @@ Function Invoke-DeviceFilter {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows', 'Android', 'iOS', 'macOS')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal')]
         [string]$Enrolment
     )
@@ -31,14 +33,14 @@ Function Invoke-DeviceFilter {
         $DisplayName = $JSON_Convert.displayName
 
         if (Get-DeviceFilter | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Host "Intune Filter '$DisplayName' already exists..." -ForegroundColor Cyan
+            Write-Information "Intune Filter '$DisplayName' already exists..." -ForegroundColor Cyan
 
         }
         else {
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-            Write-Host "Adding Intune Filter '$DisplayName'" -ForegroundColor Cyan
+            Write-Information "Adding Intune Filter '$DisplayName'"
             New-DeviceFilter -JSON $JSON_Output
-            Write-Host "Sucessfully Added Intune Filter '$DisplayName'" -ForegroundColor Green
+            Write-Information "Sucessfully Added Intune Filter '$DisplayName'"
         }
     }
 }

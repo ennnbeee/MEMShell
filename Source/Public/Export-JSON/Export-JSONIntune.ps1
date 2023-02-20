@@ -1,4 +1,4 @@
-Function Export-JSONSettings() {
+Function Export-JSONIntune() {
 
     <#
     .SYNOPSIS
@@ -10,7 +10,7 @@ Function Export-JSONSettings() {
     Export-JSONSettings -Path 'C:\Temp\Output' -Settings $Compliance
     Returns any autopilot devices
     .NOTES
-    NAME: Export-JSONSettings
+    NAME: Export-JSONIntune
     #>
     [cmdletbinding()]
     param

@@ -1,12 +1,15 @@
-Function Invoke-EnrolmentRestrictions {
+Function Invoke-EnrolmentRestriction {
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows', 'Android', 'iOS', 'macOS')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal', 'Both')]
         [string]$Enrolment,
+
         [ValidateSet('CE', 'NCSC', 'MS')]
         [string]$Engagement
     )
@@ -23,28 +26,28 @@ Function Invoke-EnrolmentRestrictions {
         if (($OS -eq 'Android') -or ($DisplayName -like '*Android*')) {
 
             if (Get-EnrolmentRestriction | Where-Object { ($_.platformType -eq $JSON_Convert.platformType ) } ) {
-                Write-Host "Enrolment Restriction '$DisplayName' already exists..." -ForegroundColor Cyan
+                Write-Information "Enrolment Restriction $DisplayName already exists."
             }
             Else {
                 $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-                Write-Host "Adding Enrolment Restriction '$DisplayName'" -ForegroundColor Cyan
+                Write-Information "Adding Enrolment Restriction $DisplayName"
                 New-EnrolmentRestriction -JSON $JSON_Output
-                Write-Host "Sucessfully Added Enrolment Restriction '$DisplayName'" -ForegroundColor Green
+                Write-Information "Sucessfully Added Enrolment Restriction $DisplayName"
             }
 
         }
         else {
             if (Get-EnrolmentRestriction | Where-Object { ($_.displayName).equals($DisplayName) }) {
 
-                Write-Host "Enrolment Restriction '$DisplayName' already exists..." -ForegroundColor Cyan
+                Write-Information "Enrolment Restriction $DisplayName already exists"
             }
 
             else {
 
                 $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-                Write-Host "Adding Enrolment Restriction '$DisplayName'" -ForegroundColor Cyan
+                Write-Information "Adding Enrolment Restriction '$DisplayName'" -ForegroundColor Cyan
                 New-EnrolmentRestriction -JSON $JSON_Output
-                Write-Host "Sucessfully Added Enrolment Restriction '$DisplayName'" -ForegroundColor Green
+                Write-Information "Sucessfully Added Enrolment Restriction $DisplayName"
             }
         }
     }

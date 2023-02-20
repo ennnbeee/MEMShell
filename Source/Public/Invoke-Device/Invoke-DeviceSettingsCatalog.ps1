@@ -14,12 +14,15 @@ Function Invoke-DeviceSettingsCatalog {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows', 'Android', 'iOS', 'macOS')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal')]
         [string]$Enrolment,
+
         [ValidateSet('CE', 'NCSC', 'MS')]
         [string]$Engagement
     )
@@ -34,15 +37,15 @@ Function Invoke-DeviceSettingsCatalog {
         $DisplayName = $JSON_Convert.name
 
         if (Get-DeviceSettingsCatalog | Where-Object { ($_.name).contains($DisplayName) }) {
-            Write-Host "Settings Catalog Profile '$DisplayName' already exists" -ForegroundColor Cyan
+            Write-Information "Settings Catalog Profile '$DisplayName' already exists"
 
         }
         else {
 
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 20
-            Write-Host "Adding Device Settings Catalog Policy '$DisplayName'" -ForegroundColor Cyan
+            Write-Information "Adding Device Settings Catalog Policy '$DisplayName'"
             New-DeviceSettingCatalog -JSON $JSON_Output
-            Write-Host "Sucessfully Added Settings Catalog Profile '$DisplayName'" -ForegroundColor Green
+            Write-Information "Sucessfully Added Settings Catalog Profile '$DisplayName'"
         }
     }
 }

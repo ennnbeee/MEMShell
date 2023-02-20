@@ -14,12 +14,15 @@ Function Invoke-DeviceUpdatePolicy {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows', 'Android', 'iOS', 'macOS')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal')]
         [string]$Enrolment,
+
         [ValidateSet('CE', 'NCSC', 'MS')]
         [string]$Engagement
     )
@@ -35,44 +38,42 @@ Function Invoke-DeviceUpdatePolicy {
 
         if ($DisplayName -like '*Windows*') {
             if (Get-DeviceUpdatePolicy -Windows10 | Where-Object { ($_.displayName).equals($DisplayName) }) {
-                Write-Host "Windows Software Update Policy '$DisplayName' already exists..." -ForegroundColor Cyan
+                Write-Information "Windows Software Update Policy $DisplayName"
 
             }
             else {
 
                 $JSON_Output = $JSON_Convert | ConvertTo-Json
-                Write-Host "Adding Windows Software Update Policy '$DisplayName'" -ForegroundColor Cyan
+                Write-Information "Adding Windows Software Update Policy $DisplayName"
                 New-DeviceConfigProfile -JSON $JSON_Output
-                Write-Host "Sucessfully Added Windows Software Update Profile '$DisplayName'" -ForegroundColor Green
+                Write-Information "Sucessfully Added Windows Software Update Profile $DisplayName"
             }
         }
         elseif ($DisplayName -like '*iOS*') {
             if (Get-DeviceUpdatePolicy -iOS | Where-Object { ($_.displayName).equals($DisplayName) }) {
-                Write-Host "iOS Software Update Policy '$DisplayName' already exists..." -ForegroundColor Cyan
-
+                Write-Information "iOS Software Update Policy $DisplayName already exists"
             }
             else {
 
                 $JSON_Output = $JSON_Convert | ConvertTo-Json
-                Write-Host "Adding iOS Software Update Policy '$DisplayName'" -ForegroundColor Cyan
+                Write-Information "Adding iOS Software Update Policy $DisplayName"
                 New-DeviceConfigProfile -JSON $JSON_Output
-                Write-Host "Sucessfully Added iOS Software Update Profile '$DisplayName'" -ForegroundColor Green
+                Write-Information "Sucessfully Added iOS Software Update Profile $DisplayName"
+            }
+            elseif ($DisplayName -like '*macOS*') {
+                if (Get-DeviceUpdatePolicy -macOS | Where-Object { ($_.displayName).equals($DisplayName) }) {
+                    Write-Information "macOS Software Update Policy $DisplayName already exists"
+
+                }
+                else {
+
+                    $JSON_Output = $JSON_Convert | ConvertTo-Json
+                    Write-Information "Adding macOS Software Update Policy $DisplayName"
+                    New-DeviceConfigProfile -JSON $JSON_Output
+                    Write-Information "Sucessfully Added macOS Software Update Profile $DisplayName"
+                }
             }
         }
-        elseif ($DisplayName -like '*macOS*') {
-            if (Get-DeviceUpdatePolicy -macOS | Where-Object { ($_.displayName).equals($DisplayName) }) {
-                Write-Host "macOS Software Update Policy '$DisplayName' already exists..." -ForegroundColor Cyan
 
-            }
-            else {
-
-                $JSON_Output = $JSON_Convert | ConvertTo-Json
-                Write-Host "Adding macOS Software Update Policy '$DisplayName'" -ForegroundColor Cyan
-                New-DeviceConfigProfile -JSON $JSON_Output
-                Write-Host "Sucessfully Added macOS Software Update Profile '$DisplayName'" -ForegroundColor Green
-            }
-        }
     }
-
-
 }

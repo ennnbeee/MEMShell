@@ -1,4 +1,4 @@
-Function Invoke-MEMGroups {
+Function Invoke-MEMGroup {
 
     <#
     .SYNOPSIS
@@ -14,10 +14,12 @@ Function Invoke-MEMGroups {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Android', 'iOS', 'macOS', 'Windows')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal', 'Both', 'MAM', 'Autopilot')]
         [string]$Enrolment
     )
@@ -35,15 +37,15 @@ Function Invoke-MEMGroups {
             If (!(Get-MEMGroup -Name $Group.DisplayName)) {
                 if (($null -eq $Group.MembershipRule) -or ($Group.MembershipRule -eq '')) {
                     New-MEMGroup -Name $Group.DisplayName -Description $Group.Description -Security $true -Mail $false -Type Assigned
-                    Write-Host 'Successfully created the group '$Group.DisplayName'...' -ForegroundColor Green
+                    Write-Information "Successfully created the group $Group.DisplayName"
                 }
                 else {
                     New-MEMGroup -Name $Group.DisplayName -Description $Group.Description -Security $true -Mail $false -type Dynamic -Rule $Group.MembershipRule
-                    Write-Host 'Successfully created the group '$Group.DisplayName'...' -ForegroundColor Green
+                    Write-Information "Successfully created the group $Group.DisplayName"
                 }
-            }
-            Else {
-                Write-Host 'The group '$Group.DisplayName' already exists......' -ForegroundColor Cyan
+                Else {
+                    Write-Information "The group $Group.DisplayName already exists"
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ Function Invoke-DeviceConfigProfile {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
         [ValidateSet('Windows', 'Android', 'iOS', 'macOS')]
         [string[]]$OS,
@@ -35,15 +35,15 @@ Function Invoke-DeviceConfigProfile {
         $DisplayName = $JSON_Convert.displayName
 
         if (Get-DeviceConfigProfile | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Host "Configuration Profile '$DisplayName' already exists..." -ForegroundColor Cyan
+            Write-Information "Configuration Profile '$DisplayName' already exists..."
 
         }
         else {
 
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-            Write-Host "Adding Device Configuration Policy '$DisplayName'" -ForegroundColor Cyan
+            Write-Information "Adding Device Configuration Policy '$DisplayName'"
             New-DeviceConfigProfile -JSON $JSON_Output
-            Write-Host "Sucessfully Added Configuration Profile '$DisplayName'" -ForegroundColor Green
+            Write-Information "Sucessfully Added Configuration Profile '$DisplayName'"
         }
     }
 }

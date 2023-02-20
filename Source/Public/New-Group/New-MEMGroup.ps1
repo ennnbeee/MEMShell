@@ -47,7 +47,7 @@ Function New-MEMGroup() {
     if ($Type -eq 'Dynamic') {
         $Output | Add-Member -MemberType NoteProperty -Name 'groupTypes' -Value @('DynamicMembership')
         if (!$Rule) {
-            Write-Host 'No Dynamic Membership rule found' -ForegroundColor Red
+            Write-Error 'No Dynamic Membership rule found'
             Break
         }
         else {

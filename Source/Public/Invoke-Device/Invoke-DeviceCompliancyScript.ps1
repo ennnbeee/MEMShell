@@ -14,12 +14,15 @@ Function Invoke-DeviceCompliancyScript {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal')]
         [string]$Enrolment,
+
         [ValidateSet('CE', 'NCSC', 'MS')]
         [string]$Engagement
     )
@@ -31,14 +34,14 @@ Function Invoke-DeviceCompliancyScript {
         $DisplayName = ($file.name).Split('.')[0]
 
         if (Get-DeviceComplianceScript | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Host "Device Script '$DisplayName' already exists" -ForegroundColor Cyan
+            Write-Information "Device Script '$DisplayName' already exists"
 
         }
         else {
 
-            Write-Host "Adding Compliance Script '$DisplayName'" -ForegroundColor Cyan
+            Write-Information "Adding Compliance Script '$DisplayName'"
             New-DeviceComplianceScript -File $ImportPath
-            Write-Host "Sucessfully Added Compliance Script '$DisplayName'" -ForegroundColor Green
+            Write-Information "Sucessfully Added Compliance Script '$DisplayName'"
         }
     }
 }

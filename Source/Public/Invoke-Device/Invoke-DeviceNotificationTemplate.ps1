@@ -14,12 +14,15 @@ Function Invoke-DeviceNotificationTemplate {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows', 'Android', 'iOS', 'macOS')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal')]
         [string]$Enrolment,
+
         [ValidateSet('CE', 'NCSC', 'MS')]
         [string]$Engagement
     )
@@ -34,15 +37,14 @@ Function Invoke-DeviceNotificationTemplate {
         $DisplayName = $JSON_Convert.displayName
 
         if (Get-DeviceNotificationTemplate | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Host "Notification Template '$DisplayName' already exists" -ForegroundColor Cyan
-
+            Write-Information "Notification Template '$DisplayName' already exists"
         }
         else {
 
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-            Write-Host "Adding Notification Template '$DisplayName'" -ForegroundColor Cyan
+            Write-Information "Adding Notification Template '$DisplayName'"
             New-DeviceNotificationTemplate -JSON $JSON_Output
-            Write-Host "Sucessfully Added Notification Template '$DisplayName'" -ForegroundColor Green
+            Write-Information "Sucessfully Added Notification Template '$DisplayName'"
         }
     }
 }

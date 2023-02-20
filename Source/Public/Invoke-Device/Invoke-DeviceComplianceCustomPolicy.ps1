@@ -14,12 +14,15 @@ Function Invoke-DeviceComplianceCustomPolicy {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal')]
         [string]$Enrolment,
+
         [ValidateSet('CE', 'NCSC', 'MS')]
         [string]$Engagement
     )
@@ -36,8 +39,7 @@ Function Invoke-DeviceComplianceCustomPolicy {
         $JSON_Convert.deviceCompliancePolicyScript.deviceComplianceScriptId = $ComplianceScript.id
 
         if (Get-DeviceCompliancePolicy | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Host "Compliance Policy '$DisplayName' already exists..." -ForegroundColor Cyan
-
+            Write-Information "Compliance Policy '$DisplayName' already exists..."
         }
         else {
 
@@ -58,9 +60,9 @@ Function Invoke-DeviceComplianceCustomPolicy {
 
             }
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-            Write-Host "Adding Compliance Policy '$DisplayName'" -ForegroundColor Cyan
+            Write-Information "Adding Compliance Policy '$DisplayName'"
             New-DeviceCompliancePolicy -JSON $JSON_Output
-            Write-Host "Sucessfully Added Compliance Policy '$DisplayName'" -ForegroundColor Green
+            Write-Information "Sucessfully Added Compliance Policy '$DisplayName'"
         }
     }
 

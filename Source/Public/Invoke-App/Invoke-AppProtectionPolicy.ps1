@@ -14,7 +14,7 @@ Function Invoke-AppProtectionPolicy {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
 
         [ValidateSet('Android', 'iOS')]
@@ -35,15 +35,14 @@ Function Invoke-AppProtectionPolicy {
         $DisplayName = $JSON_Convert.displayName
 
         if (Get-AppProtectionPolicy | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Host "App Protection Policy '$DisplayName' already exists" -ForegroundColor Cyan
-
+            Write-Information "App Protection Policy '$DisplayName' already exists"
         }
         else {
 
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-            Write-Host "Adding App Protection Policy '$DisplayName'" -ForegroundColor Cyan
+            Write-Information "Adding App Protection Policy '$DisplayName'"
             New-AppProtectionPolicy -JSON $JSON_Output
-            Write-Host "Sucessfully added App Protection Policy '$DisplayName'" -ForegroundColor Green
+            WWrite-Information "Sucessfully added App Protection Policy '$DisplayName'"
         }
     }
 

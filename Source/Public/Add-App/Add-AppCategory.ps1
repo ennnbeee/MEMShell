@@ -2,14 +2,13 @@ Function Add-AppCategory() {
 
     <#
     .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
+    This function is used to add new App Categories to Intune
     .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
+    Allows for the creation of new App Categories
     .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
+    Add-AppCategory -Name 'User Apps'
     .NOTES
-    NAME: Get-AuthTokenMSAL
+    NAME: Add-AppCategory
     #>
 
     [cmdletbinding()]

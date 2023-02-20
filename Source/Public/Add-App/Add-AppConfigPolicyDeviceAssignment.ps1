@@ -2,14 +2,15 @@ Function Add-AppConfigPolicyDeviceAssignment() {
 
     <#
     .SYNOPSIS
-    This function is used to authenticate with the Graph API REST interface
+    This function is used to assign App Configuration Profiles
     .DESCRIPTION
-    The function authenticate with the Graph API Interface with the tenant name
+    The function assigns App Configuration Profiles for Devices to Groups and Filters
     .EXAMPLE
-    Get-AuthTokenMSAL
-    Authenticates you with the Graph API interface using MSAL.PS module
+    Assigns the policy to All Device as Include, with Device Filter
+    Add-AppConfigPolicyDeviceAssignment -Id {id} -AssignmentType Include -All Devices -FilterId {Id} -FilterMode Include
+
     .NOTES
-    NAME: Get-AuthTokenMSAL
+    NAME: Add-AppConfigPolicyDeviceAssignment
     #>
 
     [cmdletbinding()]

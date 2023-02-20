@@ -14,12 +14,15 @@ Function Invoke-DeviceNotificationMessage {
 
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$Path,
+
         [ValidateSet('Windows', 'Android', 'iOS', 'macOS')]
         [string[]]$OS,
+
         [ValidateSet('Corporate', 'Personal')]
         [string]$Enrolment,
+
         [ValidateSet('CE', 'NCSC', 'MS')]
         [string]$Engagement
     )
@@ -37,14 +40,14 @@ Function Invoke-DeviceNotificationMessage {
         $NotificationTemplate = (Get-DeviceNotificationTemplate | Where-Object { ($_.displayName).equals("$filename") })
 
         if (Get-DeviceNotificationMessage -Id $NotificationTemplate.id | Where-Object { ($_.subject).equals($Subject) }) {
-            Write-Host "Notification Message with subject '$Subject' already exists on template '$($NotificationTemplate.displayName)'" -ForegroundColor Cyan
+            Write-Information "Notification Message with subject '$Subject' already exists on template '$($NotificationTemplate.displayName)'"
         }
         else {
 
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-            Write-Host "Adding Notification Message '$Subject' to '$($NotificationTemplate.displayName)'" -ForegroundColor Cyan
+            Write-Information "Adding Notification Message '$Subject' to '$($NotificationTemplate.displayName)'"
             New-DeviceNotificationMessage -Id $NotificationTemplate.id -JSON $JSON_Output
-            Write-Host "Sucessfully Added Notification Message with subject '$Subject' to template '$($NotificationTemplate.displayName)'" -ForegroundColor Green
+            Write-Information "Sucessfully Added Notification Message with subject '$Subject' to template '$($NotificationTemplate.displayName)'"
         }
     }
 }
