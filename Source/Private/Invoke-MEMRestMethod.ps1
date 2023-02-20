@@ -30,7 +30,6 @@ Function Invoke-MEMRestMethod() {
 
     $Headers = $global:authToken
 
-    $Method = 'Get'
     if ($Method -eq 'Get') {
         $ValueOnly = 'True'
         $params = @{

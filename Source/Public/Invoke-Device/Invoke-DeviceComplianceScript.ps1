@@ -1,4 +1,4 @@
-Function Invoke-DeviceCompliancyScript {
+Function Invoke-DeviceComplianceScript {
 
     <#
     .SYNOPSIS

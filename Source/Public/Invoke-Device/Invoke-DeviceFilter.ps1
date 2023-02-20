@@ -33,7 +33,7 @@ Function Invoke-DeviceFilter {
         $DisplayName = $JSON_Convert.displayName
 
         if (Get-DeviceFilter | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Information "Intune Filter '$DisplayName' already exists..." -ForegroundColor Cyan
+            Write-Information "Intune Filter '$DisplayName' already exists..."
 
         }
         else {

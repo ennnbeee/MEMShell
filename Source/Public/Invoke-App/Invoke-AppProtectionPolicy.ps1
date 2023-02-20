@@ -42,7 +42,7 @@ Function Invoke-AppProtectionPolicy {
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
             Write-Information "Adding App Protection Policy '$DisplayName'"
             New-AppProtectionPolicy -JSON $JSON_Output
-            WWrite-Information "Sucessfully added App Protection Policy '$DisplayName'"
+            Write-Information "Sucessfully added App Protection Policy '$DisplayName'"
         }
     }
 

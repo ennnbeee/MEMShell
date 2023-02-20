@@ -166,7 +166,6 @@ Function Invoke-MEMRestMethod() {
 
     $Headers = $global:authToken
 
-    $Method = 'Get'
     if ($Method -eq 'Get') {
         $ValueOnly = 'True'
         $params = @{
@@ -216,7 +215,7 @@ Function Invoke-MEMRestMethod() {
         break
     }
 }
-#EndRegion './Private/Invoke-MEMRestMethod.ps1' 83
+#EndRegion './Private/Invoke-MEMRestMethod.ps1' 82
 #Region './Private/Test-AppBundleId.ps1' 0
 Function Test-AppBundleId() {
 
@@ -1485,7 +1484,7 @@ Function Invoke-EnrolmentRestriction {
             else {
 
                 $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-                Write-Information "Adding Enrolment Restriction '$DisplayName'" -ForegroundColor Cyan
+                Write-Information "Adding Enrolment Restriction '$DisplayName'"
                 New-EnrolmentRestriction -JSON $JSON_Output
                 Write-Information "Sucessfully Added Enrolment Restriction $DisplayName"
             }
@@ -2840,7 +2839,6 @@ Function Invoke-DeviceCompliancePolicy {
 
         if (Get-DeviceCompliancePolicy | Where-Object { ($_.displayName).equals($DisplayName) }) {
             Write-Information "Compliance Policy '$DisplayName' already exists..."
-
         }
         else {
 
@@ -2874,9 +2872,9 @@ Function Invoke-DeviceCompliancePolicy {
         }
     }
 }
-#EndRegion './Public/Invoke-Device/Invoke-DeviceCompliancePolicy.ps1' 76
-#Region './Public/Invoke-Device/Invoke-DeviceCompliancyScript.ps1' 0
-Function Invoke-DeviceCompliancyScript {
+#EndRegion './Public/Invoke-Device/Invoke-DeviceCompliancePolicy.ps1' 75
+#Region './Public/Invoke-Device/Invoke-DeviceComplianceScript.ps1' 0
+Function Invoke-DeviceComplianceScript {
 
     <#
     .SYNOPSIS
@@ -2923,7 +2921,7 @@ Function Invoke-DeviceCompliancyScript {
         }
     }
 }
-#EndRegion './Public/Invoke-Device/Invoke-DeviceCompliancyScript.ps1' 48
+#EndRegion './Public/Invoke-Device/Invoke-DeviceComplianceScript.ps1' 48
 #Region './Public/Invoke-Device/Invoke-DeviceConfigProfile.ps1' 0
 Function Invoke-DeviceConfigProfile {
 
@@ -3113,7 +3111,7 @@ Function Invoke-DeviceFilter {
         $DisplayName = $JSON_Convert.displayName
 
         if (Get-DeviceFilter | Where-Object { ($_.displayName).equals($DisplayName) }) {
-            Write-Information "Intune Filter '$DisplayName' already exists..." -ForegroundColor Cyan
+            Write-Information "Intune Filter '$DisplayName' already exists..."
 
         }
         else {
@@ -3893,7 +3891,7 @@ Function Invoke-AppProtectionPolicy {
             $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
             Write-Information "Adding App Protection Policy '$DisplayName'"
             New-AppProtectionPolicy -JSON $JSON_Output
-            WWrite-Information "Sucessfully added App Protection Policy '$DisplayName'"
+            Write-Information "Sucessfully added App Protection Policy '$DisplayName'"
         }
     }
 
@@ -4264,6 +4262,50 @@ Function Add-AppMobileAppCategory() {
     }
 }
 #EndRegion './Public/Add-App/Add-AppMobileAppCategory.ps1' 45
+#Region './Public/Add-App/Add-AppMobileAppGoogle.ps1' 0
+Function Add-AppMobileAppGoogle() {
+
+    <#
+    .SYNOPSIS
+    This function is used to authenticate with the Graph API REST interface
+    .DESCRIPTION
+    The function authenticate with the Graph API Interface with the tenant name
+    .EXAMPLE
+    Get-AuthTokenMSAL
+    Authenticates you with the Graph API interface using MSAL.PS module
+    .NOTES
+    NAME: Get-AuthTokenMSAL
+    #>
+
+    [cmdletbinding()]
+
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $PackageID
+    )
+
+    $graphApiVersion = 'Beta'
+    $App_resource = 'deviceManagement/androidManagedStoreAccountEnterpriseSettings/approveApps'
+
+    try {
+        $PackageID = 'app:' + $PackageID
+        $Packages = New-Object -TypeName psobject
+        $Packages | Add-Member -MemberType NoteProperty -Name 'approveAllPermissions' -Value 'true'
+        $Packages | Add-Member -MemberType NoteProperty -Name 'packageIds' -Value @($PackageID)
+        $JSON = $Packages | ConvertTo-Json -Depth 3
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($App_resource)"
+        Invoke-MEMRestMethod -Uri $uri -Method Post -Body $JSON
+
+    }
+    catch {
+        $exs = $Error
+        $ex = $exs[0]
+        Write-Error "`n$ex"
+        break
+    }
+}
+#EndRegion './Public/Add-App/Add-AppMobileAppGoogle.ps1' 43
 #Region './Public/Add-App/Add-AppProtectionPolicyAssignment.ps1' 0
 Function Add-AppProtectionPolicyAssignment() {
 

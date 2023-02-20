@@ -45,7 +45,7 @@ Function Invoke-EnrolmentRestriction {
             else {
 
                 $JSON_Output = $JSON_Convert | ConvertTo-Json -Depth 5
-                Write-Information "Adding Enrolment Restriction '$DisplayName'" -ForegroundColor Cyan
+                Write-Information "Adding Enrolment Restriction '$DisplayName'"
                 New-EnrolmentRestriction -JSON $JSON_Output
                 Write-Information "Sucessfully Added Enrolment Restriction $DisplayName"
             }

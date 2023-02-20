@@ -39,7 +39,6 @@ Function Invoke-DeviceCompliancePolicy {
 
         if (Get-DeviceCompliancePolicy | Where-Object { ($_.displayName).equals($DisplayName) }) {
             Write-Information "Compliance Policy '$DisplayName' already exists..."
-
         }
         else {
 
